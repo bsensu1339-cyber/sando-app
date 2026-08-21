@@ -346,12 +346,18 @@
     <div class="card">
       <b>Sipariş Türü</b>
 
-      <p>
-        🪑 Masada
-        &nbsp;&nbsp;
-        📦 Gel-Al
-      </p>
+      <div id="orderTypeArea">
+  <button
+    id="pickupBtn"
+    class="cta"
+    onclick="selectPickup()">
+    📦 Gel-Al Seç
+  </button>
 
+  <div id="tableOrderInfo" class="card" style="display:none;">
+    🪑 <b id="tableOrderText">Masa</b>
+  </div>
+</div>
       <button class="cta" onclick="demoOrder()">
         Siparişi Tamamla
       </button>
@@ -459,7 +465,22 @@ let allProducts = [];
 let activeTable = null;
 let activeTableId = null;
 let cart = [];
+let orderMode = "pickup";
 
+function selectPickup(){
+  if(activeTableId){
+    alert("Bu QR bir masaya ait. Siparişiniz masaya gönderilecek.");
+    return;
+  }
+
+  orderMode = "pickup";
+
+  const btn = document.getElementById("pickupBtn");
+
+  if(btn){
+    btn.textContent = "✓ 📦 Gel-Al Seçildi";
+  }
+}
 async function detectTable(){
 
   const params = new URLSearchParams(window.location.search);
@@ -492,6 +513,22 @@ async function detectTable(){
   if(tag){
     tag.textContent = "🪑 Masa " + activeTable;
   }
+}orderMode = "table";
+
+const pickupBtn = document.getElementById("pickupBtn");
+const tableInfo = document.getElementById("tableOrderInfo");
+const tableText = document.getElementById("tableOrderText");
+
+if(pickupBtn){
+  pickupBtn.style.display = "none";
+}
+
+if(tableInfo){
+  tableInfo.style.display = "block";
+}
+
+if(tableText){
+  tableText.textContent = "Masa " + activeTable + " seçildi";
 }
 function go(id){
 
