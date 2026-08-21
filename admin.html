@@ -1,141 +1,1435 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>İşletme Paneli</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f4efe7">
+  <title>İşletme Paneli</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  background:#f3f3f1;
-  color:#181818
-}
-.wrap{max-width:1000px;margin:auto;padding:20px}
-header{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:20px
-}
-h1{margin:0;font-size:27px}
-.muted{color:#777;font-size:13px}
-.card{
-  background:#fff;border:1px solid #ddd;border-radius:18px;
-  padding:18px;margin-bottom:13px
-}
-.login{max-width:420px;margin:80px auto}
-input,select{
-  width:100%;padding:13px;border:1px solid #ddd;
-  border-radius:11px;margin:6px 0 12px;font-size:15px
-}
-button{
-  border:0;border-radius:11px;padding:11px 14px;
-  background:#181818;color:#fff;cursor:pointer;font-weight:700
-}
-.secondary{background:#eee;color:#181818}
-.top{
-  display:flex;justify-content:space-between;
-  gap:10px;align-items:flex-start
-}
-.badge{
-  display:inline-block;padding:6px 9px;border-radius:999px;
-  background:#eee;font-size:12px;margin-right:5px
-}
-.items{
-  margin-top:13px;padding-top:13px;
-  border-top:1px solid #eee
-}
-.item{
-  display:flex;justify-content:space-between;
-  margin:7px 0
-}
-.actions{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:8px;margin-top:14px
-}
-.stats{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:10px;margin-bottom:18px
-}
-.stat{
-  background:#181818;color:#fff;
-  border-radius:16px;padding:15px
-}
-.stat b{font-size:24px;display:block}
-.hidden{display:none}
-.error{color:#a22;margin-top:10px}
-@media(max-width:650px){
-  .stats{grid-template-columns:1fr}
-  .actions{grid-template-columns:1fr}
-}
-</style>
+  <style>
+    :root{
+      --bg:#f4efe7;
+      --ink:#171717;
+      --muted:#756f67;
+      --card:#fff;
+      --line:#e4ddd3;
+      --soft:#f8f5f0;
+      --success:#1f7a45;
+      --warn:#a56a16;
+      --danger:#a83232;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      color:var(--ink)
+    }
+
+    button,input,select,textarea{
+      font:inherit
+    }
+
+    button{
+      cursor:pointer
+    }
+
+    .hidden{
+      display:none!important
+    }
+
+    .login-shell{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px
+    }
+
+    .login-card{
+      width:min(440px,100%);
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:0 18px 55px #00000012
+    }
+
+    .brandline{
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.09em;
+      color:var(--muted);
+      margin-bottom:10px
+    }
+
+    h1,h2,h3,p{
+      margin-top:0
+    }
+
+    .login-card h1{
+      font-size:32px;
+      margin-bottom:6px
+    }
+
+    .muted{
+      color:var(--muted)
+    }
+
+    .field{
+      display:grid;
+      gap:7px;
+      margin-bottom:13px
+    }
+
+    .field label{
+      font-size:12px;
+      font-weight:800
+    }
+
+    .field input,
+    .field select,
+    .field textarea,
+    .toolbar input,
+    .toolbar select{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:11px 12px;
+      background:#fff;
+      outline:none
+    }
+
+    .field textarea{
+      min-height:88px;
+      resize:vertical
+    }
+
+    .primary,
+    .secondary,
+    .danger-btn,
+    .ghost{
+      border:0;
+      border-radius:12px;
+      padding:11px 14px;
+      font-weight:800
+    }
+
+    .primary{
+      background:#171717;
+      color:#fff
+    }
+
+    .secondary{
+      background:#eee9e1;
+      color:#171717
+    }
+
+    .danger-btn{
+      background:#f8e5e5;
+      color:var(--danger)
+    }
+
+    .ghost{
+      background:transparent;
+      border:1px solid var(--line)
+    }
+
+    .full{
+      width:100%
+    }
+
+    .login-error{
+      color:var(--danger);
+      font-size:13px;
+      min-height:18px;
+      margin-top:10px
+    }
+
+    .sidebar{
+      position:fixed;
+      inset:0 auto 0 0;
+      width:235px;
+      background:#171717;
+      color:#fff;
+      padding:22px 14px;
+      overflow:auto;
+      z-index:20
+    }
+
+    .sidebar .brand{
+      font-weight:900;
+      letter-spacing:.07em;
+      font-size:13px;
+      padding:0 10px 18px
+    }
+
+    .navbtn{
+      width:100%;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border:0;
+      background:transparent;
+      color:#cfcfcf;
+      padding:11px 12px;
+      border-radius:12px;
+      text-align:left;
+      margin:3px 0;
+      font-weight:700
+    }
+
+    .navbtn.active,
+    .navbtn:hover{
+      background:#2a2a2a;
+      color:#fff
+    }
+
+    .content{
+      margin-left:235px;
+      padding:22px;
+      min-height:100vh
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      margin-bottom:18px
+    }
+
+    .topbar h1{
+      font-size:30px;
+      margin-bottom:4px
+    }
+
+    .top-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap
+    }
+
+    .view{
+      display:none
+    }
+
+    .view.active{
+      display:block
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:16px
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px
+    }
+
+    .stat small{
+      display:block;
+      color:var(--muted);
+      margin-bottom:6px
+    }
+
+    .stat b{
+      font-size:24px
+    }
+
+    .panel{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      margin-bottom:16px
+    }
+
+    .panel-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px
+    }
+
+    .panel-head h2{
+      margin:0;
+      font-size:20px
+    }
+
+    .toolbar{
+      display:flex;
+      gap:9px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:13px
+    }
+
+    .toolbar .grow{
+      flex:1;
+      min-width:180px
+    }
+
+    .toolbar input,
+    .toolbar select{
+      width:auto;
+      min-width:150px
+    }
+
+    .orders{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px
+    }
+
+    .order-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:15px;
+      box-shadow:0 6px 20px #00000008
+    }
+
+    .order-head{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px
+    }
+
+    .order-no{
+      font-size:18px;
+      font-weight:900
+    }
+
+    .total{
+      font-size:20px;
+      font-weight:900;
+      white-space:nowrap
+    }
+
+    .badges{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-top:7px
+    }
+
+    .badge{
+      display:inline-flex;
+      border-radius:999px;
+      padding:5px 8px;
+      background:#f0ece6;
+      font-size:11px;
+      font-weight:800
+    }
+
+    .badge.table{
+      background:#e9eefb
+    }
+
+    .badge.pickup{
+      background:#f8eadf
+    }
+
+    .badge.paid{
+      background:#e5f5eb;
+      color:var(--success)
+    }
+
+    .badge.unpaid{
+      background:#fff0df;
+      color:var(--warn)
+    }
+
+    .customer{
+      background:var(--soft);
+      border-radius:12px;
+      padding:10px 11px;
+      font-size:13px;
+      margin-bottom:10px;
+      white-space:pre-wrap
+    }
+
+    .items{
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      padding:7px 0;
+      margin-bottom:10px
+    }
+
+    .item{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:6px 0;
+      font-size:13px
+    }
+
+    .order-controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px
+    }
+
+    .control{
+      display:grid;
+      gap:5px
+    }
+
+    .control label{
+      font-size:10px;
+      color:var(--muted);
+      font-weight:900;
+      text-transform:uppercase
+    }
+
+    .control select{
+      border:1px solid var(--line);
+      border-radius:11px;
+      padding:9px;
+      background:#fff;
+      width:100%
+    }
+
+    .tables{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px
+    }
+
+    .table-card{
+      border:1px solid var(--line);
+      border-radius:15px;
+      padding:13px;
+      background:#fff
+    }
+
+    .table-card.busy{
+      background:#fff9ef;
+      border-color:#e7c38d
+    }
+
+    .table-card.free{
+      background:#f8fff9;
+      border-color:#cfe5d5
+    }
+
+    .table-card b{
+      display:block;
+      margin-bottom:5px
+    }
+
+    .table-card small{
+      color:var(--muted)
+    }
+
+    .data-wrap{
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:14px
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:820px;
+      background:#fff
+    }
+
+    th,td{
+      padding:11px 12px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      font-size:13px;
+      vertical-align:middle
+    }
+
+    th{
+      background:#faf8f4;
+      font-size:11px;
+      text-transform:uppercase;
+      color:var(--muted)
+    }
+
+    tr:last-child td{
+      border-bottom:0
+    }
+
+    .thumb{
+      width:54px;
+      height:54px;
+      border-radius:10px;
+      object-fit:cover;
+      background:#eee;
+      border:1px solid var(--line)
+    }
+
+    .status-dot{
+      display:inline-block;
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      margin-right:6px;
+      background:#aaa
+    }
+
+    .status-dot.ok{
+      background:#32a060
+    }
+
+    .status-dot.low{
+      background:#e99b2d
+    }
+
+    .status-dot.out{
+      background:#d54848
+    }
+
+    .actions{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap
+    }
+
+    .mini{
+      border:0;
+      border-radius:9px;
+      padding:7px 9px;
+      font-size:11px;
+      font-weight:800;
+      background:#eee9e1
+    }
+
+    .mini.danger{
+      background:#f7e4e4;
+      color:var(--danger)
+    }
+
+    .empty{
+      padding:22px;
+      text-align:center;
+      color:var(--muted)
+    }
+
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:#0008;
+      display:grid;
+      place-items:center;
+      padding:18px;
+      z-index:100
+    }
+
+    .modal{
+      width:min(680px,100%);
+      max-height:92vh;
+      overflow:auto;
+      background:#fff;
+      border-radius:20px;
+      padding:20px
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px
+    }
+
+    .checkrow{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin:6px 0 14px
+    }
+
+    .checkrow label{
+      display:flex;
+      gap:7px;
+      align-items:center;
+      font-size:13px
+    }
+
+    .preview{
+      width:100%;
+      height:190px;
+      border-radius:14px;
+      object-fit:cover;
+      background:#eee;
+      border:1px solid var(--line);
+      margin-bottom:10px
+    }
+
+    .toast{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      background:#171717;
+      color:#fff;
+      padding:12px 14px;
+      border-radius:12px;
+      z-index:120;
+      box-shadow:0 10px 30px #0003;
+      max-width:360px
+    }
+
+    .report-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px
+    }
+
+    .report-box{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:15px
+    }
+
+    .report-box b{
+      font-size:22px
+    }
+
+    .report-box small{
+      display:block;
+      color:var(--muted);
+      margin-bottom:6px
+    }
+
+    @media(max-width:1000px){
+      .orders{
+        grid-template-columns:1fr
+      }
+
+      .stats{
+        grid-template-columns:repeat(2,1fr)
+      }
+
+      .tables{
+        grid-template-columns:repeat(2,1fr)
+      }
+    }
+
+    @media(max-width:760px){
+      .sidebar{
+        position:static;
+        width:auto;
+        display:flex;
+        gap:5px;
+        overflow:auto;
+        padding:10px
+      }
+
+      .sidebar .brand{
+        display:none
+      }
+
+      .navbtn{
+        width:auto;
+        white-space:nowrap
+      }
+
+      .content{
+        margin-left:0;
+        padding:14px
+      }
+
+      .topbar{
+        display:block
+      }
+
+      .top-actions{
+        margin-top:10px
+      }
+
+      .grid2{
+        grid-template-columns:1fr
+      }
+
+      .report-grid{
+        grid-template-columns:1fr
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="wrap">
+<section id="loginView" class="login-shell">
 
-<div id="loginScreen" class="login">
-  <div class="card">
-    <h1>İşletme Paneli</h1>
-    <p class="muted">Sando Lab · Toastiq · CRAVÉ</p>
+  <div class="login-card">
 
-    <input id="email" type="email" placeholder="Yönetici e-posta">
-    <input id="password" type="password" placeholder="Şifre">
+    <div class="brandline">
+      SANDO LAB · TOASTIQ · CRAVÉ
+    </div>
 
-    <button style="width:100%" onclick="login()">Giriş Yap</button>
+    <h1>
+      İşletme Paneli
+    </h1>
 
-    <div id="loginError" class="error"></div>
+    <p class="muted">
+      Sipariş, masa, ürün, stok ve rapor yönetimi.
+    </p>
+
+    <div class="field">
+      <label>E-posta</label>
+      <input
+        id="email"
+        type="email"
+        autocomplete="username">
+    </div>
+
+    <div class="field">
+      <label>Şifre</label>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password">
+    </div>
+
+    <button
+      class="primary full"
+      onclick="login()">
+      Giriş Yap
+    </button>
+
+    <div
+      id="loginError"
+      class="login-error">
+    </div>
+
   </div>
+
+</section>
+
+
+<section
+  id="appView"
+  class="hidden">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      SANDO LAB · TOASTIQ · CRAVÉ
+    </div>
+
+    <button
+      class="navbtn active"
+      data-view="dashboard"
+      onclick="openView('dashboard',this)">
+      📊 Dashboard
+    </button>
+
+    <button
+      class="navbtn"
+      data-view="orders"
+      onclick="openView('orders',this)">
+      🧾 Siparişler
+    </button>
+
+    <button
+      class="navbtn"
+      data-view="tables"
+      onclick="openView('tables',this)">
+      🪑 Masalar
+    </button>
+
+    <button
+      class="navbtn"
+      data-view="products"
+      onclick="openView('products',this)">
+      🥪 Ürünler
+    </button>
+
+    <button
+      class="navbtn"
+      data-view="stock"
+      onclick="openView('stock',this)">
+      📦 Stok
+    </button>
+
+    <button
+      class="navbtn"
+      data-view="reports"
+      onclick="openView('reports',this)">
+      📈 Raporlar
+    </button>
+
+  </aside>
+
+
+  <main class="content">
+
+    <div class="topbar">
+
+      <div>
+
+        <div class="brandline">
+          İŞLETME YÖNETİMİ
+        </div>
+
+        <h1 id="viewTitle">
+          Dashboard
+        </h1>
+
+        <p
+          class="muted"
+          id="lastUpdate">
+          Canlı sistem
+        </p>
+
+      </div>
+
+      <div class="top-actions">
+
+        <button
+          class="secondary"
+          onclick="loadAll()">
+          ↻ Yenile
+        </button>
+
+        <button
+          class="danger-btn"
+          onclick="logout()">
+          Çıkış
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <section
+      id="view-dashboard"
+      class="view active">
+
+      <div class="stats">
+
+        <div class="stat">
+          <small>Aktif Sipariş</small>
+          <b id="statActive">0</b>
+        </div>
+
+        <div class="stat">
+          <small>Ödenmemiş</small>
+          <b id="statUnpaid">0</b>
+        </div>
+
+        <div class="stat">
+          <small>Aktif Masa</small>
+          <b id="statTables">0</b>
+        </div>
+
+        <div class="stat">
+          <small>Aktif Toplam</small>
+          <b id="statTotal">0 TL</b>
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-head">
+
+          <h2>
+            Son Aktif Siparişler
+          </h2>
+
+          <button
+            class="secondary"
+            onclick="openView('orders')">
+            Tümünü Gör
+          </button>
+
+        </div>
+
+        <div
+          id="dashboardOrders"
+          class="orders">
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-head">
+          <h2>Masa Durumu</h2>
+        </div>
+
+        <div
+          id="dashboardTables"
+          class="tables">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section
+      id="view-orders"
+      class="view">
+
+      <div class="panel">
+
+        <div class="toolbar">
+
+          <select
+            id="orderTypeFilter"
+            onchange="renderOrders()">
+
+            <option value="all">
+              Tüm Siparişler
+            </option>
+
+            <option value="table">
+              Masada
+            </option>
+
+            <option value="pickup">
+              Gel-Al
+            </option>
+
+          </select>
+
+
+          <select
+            id="orderStatusFilter"
+            onchange="renderOrders()">
+
+            <option value="active">
+              Aktif
+            </option>
+
+            <option value="all">
+              Tüm Durumlar
+            </option>
+
+            <option value="new">
+              Yeni
+            </option>
+
+            <option value="confirmed">
+              Onaylandı
+            </option>
+
+            <option value="preparing">
+              Hazırlanıyor
+            </option>
+
+            <option value="ready">
+              Hazır
+            </option>
+
+            <option value="served">
+              Servis Edildi
+            </option>
+
+            <option value="completed">
+              Tamamlandı
+            </option>
+
+            <option value="cancelled">
+              İptal
+            </option>
+
+          </select>
+
+
+          <input
+            id="orderSearch"
+            class="grow"
+            placeholder="Sipariş no / müşteri ara"
+            oninput="renderOrders()">
+
+        </div>
+
+
+        <div
+          id="ordersArea"
+          class="orders">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section
+      id="view-tables"
+      class="view">
+
+      <div class="panel">
+
+        <div class="panel-head">
+          <h2>Masalar</h2>
+        </div>
+
+        <div
+          id="tablesArea"
+          class="tables">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section
+      id="view-products"
+      class="view">
+
+      <div class="panel">
+
+        <div class="panel-head">
+
+          <h2>
+            Ürün Yönetimi
+          </h2>
+
+          <button
+            class="primary"
+            onclick="openProductModal()">
+            + Yeni Ürün
+          </button>
+
+        </div>
+
+
+        <div class="toolbar">
+
+          <input
+            id="productSearch"
+            class="grow"
+            placeholder="Ürün ara"
+            oninput="renderProducts()">
+
+          <select
+            id="productBrandFilter"
+            onchange="renderProducts()">
+
+            <option value="all">
+              Tüm Markalar
+            </option>
+
+          </select>
+
+          <select
+            id="productAvailabilityFilter"
+            onchange="renderProducts()">
+
+            <option value="all">
+              Tümü
+            </option>
+
+            <option value="available">
+              Satışta
+            </option>
+
+            <option value="hidden">
+              Gizli
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="data-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Görsel</th>
+                <th>Ürün</th>
+                <th>Marka</th>
+                <th>Kategori</th>
+                <th>Fiyat</th>
+                <th>Stok</th>
+                <th>Durum</th>
+                <th>İşlem</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="productsBody">
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section
+      id="view-stock"
+      class="view">
+
+      <div class="panel">
+
+        <div class="panel-head">
+          <h2>Stok Takibi</h2>
+        </div>
+
+
+        <div class="toolbar">
+
+          <input
+            id="stockSearch"
+            class="grow"
+            placeholder="Ürün ara"
+            oninput="renderStock()">
+
+          <select
+            id="stockFilter"
+            onchange="renderStock()">
+
+            <option value="all">
+              Tüm Stoklar
+            </option>
+
+            <option value="low">
+              Düşük Stok
+            </option>
+
+            <option value="out">
+              Tükendi
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="data-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Ürün</th>
+                <th>Mevcut</th>
+                <th>Minimum</th>
+                <th>Durum</th>
+                <th>Hızlı Güncelle</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="stockBody">
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section
+      id="view-reports"
+      class="view">
+
+      <div class="report-grid">
+
+        <div class="report-box">
+          <small>Bugünkü Ciro</small>
+          <b id="reportTodayRevenue">0 TL</b>
+        </div>
+
+        <div class="report-box">
+          <small>Bugünkü Sipariş</small>
+          <b id="reportTodayOrders">0</b>
+        </div>
+
+        <div class="report-box">
+          <small>Ortalama Sepet</small>
+          <b id="reportAvg">0 TL</b>
+        </div>
+
+      </div>
+
+
+      <div
+        class="panel"
+        style="margin-top:16px">
+
+        <div class="panel-head">
+          <h2>En Çok Satan Ürünler</h2>
+        </div>
+
+
+        <div class="data-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Ürün</th>
+                <th>Adet</th>
+                <th>Ciro</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="bestSellersBody">
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</section>
+
+
+<div
+  id="productModal"
+  class="modal-backdrop hidden">
+
+  <div class="modal">
+
+    <div class="panel-head">
+
+      <h2 id="productModalTitle">
+        Yeni Ürün
+      </h2>
+
+      <button
+        class="ghost"
+        onclick="closeProductModal()">
+        ✕
+      </button>
+
+    </div>
+
+    <input
+      id="productId"
+      type="hidden">
+
+
+    <div class="grid2">
+
+      <div class="field">
+
+        <label>
+          Ürün Adı
+        </label>
+
+        <input id="pName">
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Fiyat
+        </label>
+
+        <input
+          id="pPrice"
+          type="number"
+          min="0"
+          step="0.01">
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Marka
+        </label>
+
+        <select
+          id="pBrand"
+          onchange="fillCategorySelect()">
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Kategori
+        </label>
+
+        <select id="pCategory">
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Sıralama
+        </label>
+
+        <input
+          id="pSort"
+          type="number"
+          value="0">
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Stok
+        </label>
+
+        <input
+          id="pStock"
+          type="number"
+          min="0"
+          value="0">
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Minimum Stok
+        </label>
+
+        <input
+          id="pMinStock"
+          type="number"
+          min="0"
+          value="5">
+
+      </div>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        Açıklama
+      </label>
+
+      <textarea id="pDescription">
+      </textarea>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        Görsel URL
+      </label>
+
+      <input
+        id="pImageUrl"
+        placeholder="https://...">
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        Veya Görsel Yükle
+      </label>
+
+      <input
+        id="pImageFile"
+        type="file"
+        accept="image/*">
+
+    </div>
+
+
+    <img
+      id="pPreview"
+      class="preview hidden"
+      alt="Ürün görseli">
+
+
+    <div class="checkrow">
+
+      <label>
+        <input
+          id="pAvailable"
+          type="checkbox"
+          checked>
+        Satışta
+      </label>
+
+      <label>
+        <input
+          id="pBest"
+          type="checkbox">
+        Çok Satan
+      </label>
+
+      <label>
+        <input
+          id="pFeatured"
+          type="checkbox">
+        Öne Çıkan
+      </label>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        class="primary"
+        onclick="saveProduct()">
+        Kaydet
+      </button>
+
+      <button
+        class="secondary"
+        onclick="closeProductModal()">
+        Vazgeç
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
 
-<div id="panel" class="hidden">
-
-<header>
-  <div>
-    <h1>İşletme Paneli</h1>
-    <div class="muted">Canlı sipariş yönetimi</div>
-  </div>
-
-  <button class="secondary" onclick="logout()">Çıkış</button>
-</header>
-
-
-<div class="stats">
-<div class="card">
-  <h2>🪑 Masalar</h2>
-
-  <div id="tablesStatus">
-    Masalar yükleniyor...
-  </div>
-</div>
-  <div class="stat">
-    <span>Yeni</span>
-    <b id="newCount">0</b>
-  </div>
-
-  <div class="stat">
-    <span>Hazırlanıyor</span>
-    <b id="prepCount">0</b>
-  </div>
-
-  <div class="stat">
-    <span>Hazır</span>
-    <b id="readyCount">0</b>
-  </div>
-
-</div>
-
-<div id="orders">
-  <div class="card">Siparişler yükleniyor...</div>
-</div>
-
-</div>
-
+<div
+  id="toast"
+  class="toast hidden">
 </div>
 
 
@@ -147,38 +1441,239 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_xGk_ZkAAC-3V7jcGCv78Lw_wG8zuekw";
 
-const db = window.supabase.createClient(
+const db =
+window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
 
+let orders = [];
+let products = [];
+let brands = [];
+let categories = [];
+let tables = [];
+let inventory = [];
+let refreshTimer = null;
+
+
+const $ =
+id =>
+  document.getElementById(id);
+
+
+const money =
+value =>
+  Number(value || 0)
+    .toLocaleString("tr-TR") +
+  " TL";
+
+
+const esc =
+value =>
+  String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+
+const closedStatuses = [
+  "completed",
+  "closed",
+  "cancelled"
+];
+
+
+function toast(message){
+
+  $("toast").textContent =
+    message;
+
+  $("toast")
+    .classList
+    .remove("hidden");
+
+  clearTimeout(
+    toast.timer
+  );
+
+  toast.timer =
+    setTimeout(
+      () =>
+        $("toast")
+          .classList
+          .add("hidden"),
+      2500
+    );
+}
+
+
+function statusName(status){
+
+  const map = {
+
+    new:
+      "Yeni",
+
+    confirmed:
+      "Onaylandı",
+
+    preparing:
+      "Hazırlanıyor",
+
+    ready:
+      "Hazır",
+
+    customer_arrived:
+      "Müşteri Geldi",
+
+    served:
+      "Servis Edildi",
+
+    completed:
+      "Tamamlandı",
+
+    closed:
+      "Kapandı",
+
+    cancelled:
+      "İptal"
+
+  };
+
+  return (
+    map[status] ||
+    status ||
+    "-"
+  );
+}
+
+
+function openView(
+  name,
+  button = null
+){
+
+  document
+    .querySelectorAll(
+      ".view"
+    )
+    .forEach(
+      view =>
+        view
+          .classList
+          .remove("active")
+    );
+
+  $("view-" + name)
+    .classList
+    .add("active");
+
+
+  document
+    .querySelectorAll(
+      ".navbtn"
+    )
+    .forEach(
+      btn =>
+        btn
+          .classList
+          .remove("active")
+    );
+
+
+  const targetButton =
+    button ||
+    document.querySelector(
+      `.navbtn[data-view="${name}"]`
+    );
+
+
+  if(targetButton){
+
+    targetButton
+      .classList
+      .add("active");
+
+  }
+
+
+  $("viewTitle").textContent = {
+
+    dashboard:
+      "Dashboard",
+
+    orders:
+      "Siparişler",
+
+    tables:
+      "Masalar",
+
+    products:
+      "Ürünler",
+
+    stock:
+      "Stok",
+
+    reports:
+      "Raporlar"
+
+  }[name] || name;
+}
+
+
 async function login(){
 
+  $("loginError").textContent =
+    "";
+
+
   const email =
-    document.getElementById("email").value.trim();
+    $("email")
+      .value
+      .trim();
+
 
   const password =
-    document.getElementById("password").value;
+    $("password")
+      .value;
 
-  const errorArea =
-    document.getElementById("loginError");
 
-  errorArea.textContent = "";
+  if(
+    !email ||
+    !password
+  ){
 
-  const {error} =
-    await db.auth.signInWithPassword({
-      email,
-      password
-    });
+    $("loginError").textContent =
+      "E-posta ve şifre gerekli.";
 
-  if(error){
-    errorArea.textContent =
-      "Giriş başarısız: " + error.message;
     return;
   }
 
-  showPanel();
+
+  const {error} =
+    await db.auth
+      .signInWithPassword({
+
+        email,
+        password
+
+      });
+
+
+  if(error){
+
+    $("loginError").textContent =
+      "Giriş başarısız: " +
+      error.message;
+
+    return;
+  }
+
+
+  await showApp();
 }
 
 
@@ -186,393 +1681,2913 @@ async function logout(){
 
   await db.auth.signOut();
 
-  location.reload();
-}
 
+  if(refreshTimer){
 
-async function checkLogin(){
+    clearInterval(
+      refreshTimer
+    );
 
-  const {data} =
-    await db.auth.getSession();
-
-  if(data.session){
-    showPanel();
   }
+
+
+  $("appView")
+    .classList
+    .add("hidden");
+
+
+  $("loginView")
+    .classList
+    .remove("hidden");
 }
 
 
-function showPanel(){
+async function showApp(){
 
-  document
-    .getElementById("loginScreen")
-    .classList.add("hidden");
+  $("loginView")
+    .classList
+    .add("hidden");
 
-  document
-    .getElementById("panel")
-    .classList.remove("hidden");
 
-  loadOrders();
+  $("appView")
+    .classList
+    .remove("hidden");
+
+
+  await loadAll();
+
+
+  if(refreshTimer){
+
+    clearInterval(
+      refreshTimer
+    );
+
+  }
+
+
+  refreshTimer =
+    setInterval(
+      loadAll,
+      5000
+    );
+}
+
+
+async function loadAll(){
+
+  await Promise.all([
+
+    loadOrders(),
+
+    loadProducts(),
+
+    loadMeta(),
+
+    loadTables(),
+
+    loadInventory()
+
+  ]);
+
+
+  updateStats();
+
+  renderDashboard();
+
+  renderOrders();
+
+  renderTables();
+
+  renderProducts();
+
+  renderStock();
+
+  renderReports();
+
+
+  $("lastUpdate").textContent =
+    "Son güncelleme: " +
+    new Date()
+      .toLocaleTimeString(
+        "tr-TR"
+      );
 }
 
 
 async function loadOrders(){
 
-  const area =
-    document.getElementById("orders");
-
   const {data,error} =
     await db
       .from("orders")
       .select(`
-  *,
-  tables (
-    table_number
-  ),
-  order_items (
-    id,
-    product_name,
-    quantity,
-    unit_price
-  )
-`)
-      .order("created_at",{ascending:false});
+
+        *,
+
+        tables (
+          table_number
+        ),
+
+        order_items (
+          id,
+          product_id,
+          product_name,
+          quantity,
+          unit_price
+        )
+
+      `)
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
 
   if(error){
 
-    area.innerHTML =
-      `<div class="card">
-      Siparişler alınamadı: ${error.message}
-      </div>`;
+    console.error(
+      error
+    );
 
     return;
   }
 
 
-  const orders = data || [];
-
-  updateStats(orders);
-
-
-  if(orders.length === 0){
-
-    area.innerHTML =
-      `<div class="card">
-      Henüz sipariş bulunmuyor.
-      </div>`;
-
-    return;
-  }
-
-
-  area.innerHTML =
-    orders.map(orderCard).join("");
-  loadTablesStatus(orders);
+  orders =
+    data || [];
 }
 
 
-function orderCard(order){
+async function loadProducts(){
 
- const type =
-  order.order_type === "table"
-    ? "🪑 MASA " + (order.tables?.table_number || "?")
-    : "📦 GEL-AL";
+  const {data,error} =
+    await db
+      .from("products")
+      .select(`
 
-  const customer =
-    order.customer_note || "Misafir";
+        id,
+        name,
+        description,
+        price,
+        image_url,
+        is_best_seller,
+        is_featured,
+        is_available,
+        sort_order,
+        brand_id,
+        category_id,
+
+        brands (
+          id,
+          name,
+          slug
+        ),
+
+        categories (
+          id,
+          name
+        )
+
+      `)
+      .order(
+        "sort_order"
+      );
+
+
+  if(error){
+
+    console.error(
+      error
+    );
+
+    return;
+  }
+
+
+  products =
+    data || [];
+}
+
+
+async function loadMeta(){
+
+  const [
+    brandResult,
+    categoryResult
+  ] =
+    await Promise.all([
+
+      db
+        .from("brands")
+        .select(
+          "id,name,slug"
+        )
+        .order("name"),
+
+      db
+        .from("categories")
+        .select(
+          "id,name,brand_id"
+        )
+        .order("name")
+
+    ]);
+
+
+  if(
+    !brandResult.error
+  ){
+
+    brands =
+      brandResult.data ||
+      [];
+
+  }
+
+
+  if(
+    !categoryResult.error
+  ){
+
+    categories =
+      categoryResult.data ||
+      [];
+
+  }
+
+
+  fillMetaSelects();
+}
+
+
+async function loadTables(){
+
+  const {data,error} =
+    await db
+      .from("tables")
+      .select(
+        "id,table_number,is_active"
+      )
+      .eq(
+        "is_active",
+        true
+      )
+      .order(
+        "table_number"
+      );
+
+
+  if(!error){
+
+    tables =
+      data || [];
+
+  }
+}
+
+
+async function loadInventory(){
+
+  const {data,error} =
+    await db
+      .from("inventory")
+      .select(
+        "product_id,stock_qty,min_stock,updated_at"
+      );
+
+
+  if(error){
+
+    console.warn(
+      "inventory tablosu okunamadı:",
+      error.message
+    );
+
+    inventory =
+      [];
+
+    return;
+  }
+
+
+  inventory =
+    data || [];
+}
+
+
+function inventoryFor(
+  productId
+){
+
+  return (
+    inventory.find(
+      item =>
+        item.product_id ===
+        productId
+    ) ||
+    {
+
+      product_id:
+        productId,
+
+      stock_qty:
+        0,
+
+      min_stock:
+        5
+
+    }
+  );
+}
+
+
+function activeOrders(){
+
+  return orders.filter(
+    order =>
+      !closedStatuses.includes(
+        order.status
+      )
+  );
+}
+
+
+function updateStats(){
+
+  const active =
+    activeOrders();
+
+
+  $("statActive").textContent =
+    active.length;
+
+
+  $("statUnpaid").textContent =
+    active.filter(
+      order =>
+        order.payment_status !==
+        "paid"
+    ).length;
+
+
+  $("statTables").textContent =
+    new Set(
+
+      active
+        .filter(
+          order =>
+            order.order_type ===
+              "table" &&
+            order.table_id
+        )
+        .map(
+          order =>
+            order.table_id
+        )
+
+    ).size;
+
+
+  $("statTotal").textContent =
+    money(
+
+      active.reduce(
+        (
+          total,
+          order
+        ) =>
+          total +
+          Number(
+            order.total ||
+            0
+          ),
+        0
+      )
+
+    );
+}
+
+
+function orderTypeLabel(
+  order
+){
+
+  if(
+    order.order_type ===
+    "table"
+  ){
+
+    return (
+      "🪑 Masa " +
+      (
+        order.tables
+          ?.table_number ??
+        "?"
+      )
+    );
+
+  }
+
+
+  return "📦 Gel-Al";
+}
+
+
+function statusOptions(
+  current,
+  type
+){
+
+  const list =
+    type === "table"
+
+    ? [
+
+        ["new","Yeni"],
+
+        ["confirmed","Onaylandı"],
+
+        ["preparing","Hazırlanıyor"],
+
+        ["ready","Hazır"],
+
+        ["served","Servis Edildi"],
+
+        ["completed","Tamamlandı"],
+
+        ["cancelled","İptal"]
+
+      ]
+
+    : [
+
+        ["new","Yeni"],
+
+        ["confirmed","Onaylandı"],
+
+        ["preparing","Hazırlanıyor"],
+
+        ["ready","Hazır"],
+
+        ["customer_arrived","Müşteri Geldi"],
+
+        ["completed","Teslim Edildi"],
+
+        ["cancelled","İptal"]
+
+      ];
+
+
+  return list
+    .map(
+      ([value,label]) => `
+
+        <option
+          value="${value}"
+          ${
+            current === value
+            ? "selected"
+            : ""
+          }>
+
+          ${label}
+
+        </option>
+
+      `
+    )
+    .join("");
+}
+
+
+function orderCard(
+  order
+){
 
   const items =
-    (order.order_items || [])
-      .map(item => `
+    (
+      order.order_items ||
+      []
+    )
+    .map(
+      item => `
+
         <div class="item">
+
           <span>
-            ${item.quantity} × ${item.product_name}
+
+            ${esc(
+              item.quantity ||
+              1
+            )}
+
+            ×
+
+            ${esc(
+              item.product_name ||
+              "Ürün"
+            )}
+
           </span>
 
           <b>
-            ${Number(item.unit_price || 0)
-              .toLocaleString("tr-TR")} TL
+
+            ${money(
+
+              Number(
+                item.unit_price ||
+                0
+              )
+              *
+              Number(
+                item.quantity ||
+                1
+              )
+
+            )}
+
           </b>
+
         </div>
-      `)
-      .join("");
+
+      `
+    )
+    .join("");
+
+
+  const paid =
+    order.payment_status ===
+    "paid";
 
 
   return `
 
-  <div class="card">
+    <article class="order-card">
 
-    <div class="top">
+      <div class="order-head">
 
-      <div>
-        <b>${order.order_number}</b>
+        <div>
 
-        <div style="margin-top:8px">
-          <span class="badge">${type}</span>
-          <span class="badge">${statusName(order.status)}</span>
+          <div class="order-no">
+
+            ${esc(
+              order.order_number ||
+              "Sipariş"
+            )}
+
+          </div>
+
+
+          <div class="badges">
+
+            <span
+              class="badge ${
+                order.order_type ===
+                "table"
+                ? "table"
+                : "pickup"
+              }">
+
+              ${esc(
+                orderTypeLabel(
+                  order
+                )
+              )}
+
+            </span>
+
+
+            <span class="badge">
+
+              ${esc(
+                statusName(
+                  order.status
+                )
+              )}
+
+            </span>
+
+
+            <span
+              class="badge ${
+                paid
+                ? "paid"
+                : "unpaid"
+              }">
+
+              ${
+                paid
+                ? "✅ Ödendi"
+                : "💳 Ödenmedi"
+              }
+
+            </span>
+
+          </div>
+
         </div>
+
+
+        <div class="total">
+
+          ${money(
+            order.total
+          )}
+
+        </div>
+
       </div>
 
-      <b>
-        ${Number(order.total || 0)
-          .toLocaleString("tr-TR")} TL
-      </b>
 
-    </div>
+      <div class="customer">
+
+        <b>
+
+          ${
+            order.order_type ===
+            "table"
+
+            ? "Sipariş"
+
+            : "Müşteri"
+          }:
+
+        </b>
+
+        ${esc(
+
+          order.order_type ===
+          "table"
+
+          ? "Masadan sipariş"
+
+          : (
+              order.customer_note ||
+              "Misafir"
+            )
+
+        )}
+
+      </div>
 
 
-    <p>
-      <b>Müşteri:</b> ${customer}
-    </p>
+      <div class="items">
+
+        ${
+          items ||
+          `
+
+            <div class="item">
+
+              <span>
+                Ürün bilgisi yok
+              </span>
+
+            </div>
+
+          `
+        }
+
+      </div>
 
 
-    <div class="items">
-      ${items || "Ürün bulunamadı"}
-    </div>
+      <div class="order-controls">
+
+        <div class="control">
+
+          <label>
+            Durum
+          </label>
+
+          <select
+            onchange="
+              changeStatus(
+                '${order.id}',
+                this.value
+              )
+            ">
+
+            ${statusOptions(
+              order.status,
+              order.order_type
+            )}
+
+          </select>
+
+        </div>
 
 
-    <div class="actions">
+        <div class="control">
 
-      <select
-        onchange="changeStatus(
-          '${order.id}',
-          this.value
-        )">
+          <label>
+            Ödeme
+          </label>
 
-        ${statusOptions(order.status, order.order_type)}
+          <select
+            onchange="
+              changePayment(
+                '${order.id}',
+                this.value
+              )
+            ">
 
-      </select>
+            <option
+              value=""
+              ${
+                !paid
+                ? "selected"
+                : ""
+              }>
+
+              Ödenmedi
+
+            </option>
 
 
-      <select
-  onchange="changePayment(
-    '${order.id}',
-    this.value
-  )">
+            <option
+              value="cash"
+              ${
+                paid &&
+                order.payment_method ===
+                "cash"
 
-  <option
-    value=""
-    ${order.payment_status === "unpaid" ? "selected" : ""}>
-    Ödenmedi
-  </option>
+                ? "selected"
+                : ""
+              }>
 
-  <option
-    value="cash"
-    ${order.payment_status === "paid" && order.payment_method === "cash" ? "selected" : ""}>
-    💵 Nakit
-  </option>
+              💵 Nakit
 
-  <option
-    value="card"
-    ${order.payment_status === "paid" && order.payment_method === "card" ? "selected" : ""}>
-    💳 Kart
-  </option>
+            </option>
 
-</select>
 
-    </div>
+            <option
+              value="card"
+              ${
+                paid &&
+                order.payment_method ===
+                "card"
 
-  </div>
+                ? "selected"
+                : ""
+              }>
+
+              💳 Kart
+
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </article>
 
   `;
 }
 
 
-function statusName(status){
+function renderDashboard(){
 
-  const names = {
-    new:"Yeni",
-    confirmed:"Onaylandı",
-    preparing:"Hazırlanıyor",
-    ready:"Hazır",
-    customer_arrived:"Müşteri Geldi",
-    completed:"Teslim Edildi",
-    cancelled:"İptal"
-  };
+  $("dashboardOrders").innerHTML =
+    activeOrders()
+      .slice(
+        0,
+        4
+      )
+      .map(
+        orderCard
+      )
+      .join("")
+    ||
+    `
+      <div class="empty">
+        Aktif sipariş yok.
+      </div>
+    `;
 
-  return names[status] || status;
+
+  renderTablesInto(
+    "dashboardTables"
+  );
 }
 
 
-function statusOptions(current, orderType){
+function renderOrders(){
 
-  const tableStatuses = [
-    ["new","Yeni"],
-    ["confirmed","Onaylandı"],
-    ["preparing","Hazırlanıyor"],
-    ["ready","Hazır"],
-    ["served","Servis Edildi"],
-    ["closed","Masa Kapatıldı"],
-    ["cancelled","İptal"]
-  ];
-
-  const pickupStatuses = [
-    ["new","Yeni"],
-    ["confirmed","Onaylandı"],
-    ["preparing","Hazırlanıyor"],
-    ["ready","Hazır"],
-    ["customer_arrived","Müşteri Geldi"],
-    ["completed","Teslim Edildi"],
-    ["cancelled","İptal"]
-  ];
-
-  const statuses =
-    orderType === "table"
-      ? tableStatuses
-      : pickupStatuses;
-
-  return statuses
-    .map(([value,label]) => `
-      <option
-        value="${value}"
-        ${current === value ? "selected" : ""}>
-        ${label}
-      </option>
-    `)
-    .join("");
-}
-
-
-async function changeStatus(id,status){
-
-  if(status === "closed"){
-
-    const {data: order, error: readError} = await db
-      .from("orders")
-      .select("payment_status, payment_method")
-      .eq("id", id)
-      .single();
-
-    if(readError){
-      alert("Sipariş bilgisi alınamadı: " + readError.message);
-      loadOrders();
-      return;
-    }
-
-    if(order.payment_status !== "paid"){
-      alert("Bu masa kapatılamaz. Önce ödeme alınmalı.");
-      loadOrders();
-      return;
-    }
-
-    const method =
-      order.payment_method === "cash"
-        ? "Nakit"
-        : order.payment_method === "card"
-        ? "Kart"
-        : "Ödeme";
-
-    const approved = confirm(
-      method + " ödeme alınmış görünüyor. Masa kapatılsın mı?"
-    );
-
-    if(!approved){
-      loadOrders();
-      return;
-    }
-  }
-
-  const {error} =
-    await db
-      .from("orders")
-      .update({status})
-      .eq("id",id);
-
-  if(error){
-    alert("Durum değiştirilemedi: " + error.message);
-    loadOrders();
+  if(
+    !$("ordersArea")
+  ){
     return;
   }
 
-  loadOrders();
-}
-async function changePayment(id,method){
 
-  let payment_status = "unpaid";
-  let payment_method = null;
+  let list =
+    [...orders];
 
-  if(method === "cash" || method === "card"){
-    payment_status = "paid";
-    payment_method = method;
+
+  const type =
+    $("orderTypeFilter")
+      .value;
+
+
+  const status =
+    $("orderStatusFilter")
+      .value;
+
+
+  const query =
+    $("orderSearch")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  if(
+    type !==
+    "all"
+  ){
+
+    list =
+      list.filter(
+        order =>
+          order.order_type ===
+          type
+      );
+
   }
+
+
+  if(
+    status ===
+    "active"
+  ){
+
+    list =
+      list.filter(
+        order =>
+          !closedStatuses.includes(
+            order.status
+          )
+      );
+
+  }
+  else if(
+    status !==
+    "all"
+  ){
+
+    list =
+      list.filter(
+        order =>
+          order.status ===
+          status
+      );
+
+  }
+
+
+  if(query){
+
+    list =
+      list.filter(
+        order =>
+
+          (
+            order.order_number ||
+            ""
+          )
+          .toLowerCase()
+          .includes(query)
+
+          ||
+
+          (
+            order.customer_note ||
+            ""
+          )
+          .toLowerCase()
+          .includes(query)
+
+      );
+
+  }
+
+
+  $("ordersArea").innerHTML =
+    list
+      .map(
+        orderCard
+      )
+      .join("")
+    ||
+    `
+      <div class="empty">
+        Sipariş bulunamadı.
+      </div>
+    `;
+}
+
+
+function renderTablesInto(
+  id
+){
+
+  const area =
+    $(id);
+
+
+  if(!area){
+
+    return;
+
+  }
+
+
+  const active =
+    activeOrders();
+
+
+  area.innerHTML =
+    tables
+      .map(
+        table => {
+
+          const tableOrders =
+            active.filter(
+              order =>
+                order.order_type ===
+                  "table"
+                &&
+                order.table_id ===
+                  table.id
+            );
+
+
+          const total =
+            tableOrders.reduce(
+              (
+                sum,
+                order
+              ) =>
+                sum +
+                Number(
+                  order.total ||
+                  0
+                ),
+              0
+            );
+
+
+          const busy =
+            tableOrders.length >
+            0;
+
+
+          return `
+
+            <div
+              class="
+                table-card
+                ${
+                  busy
+                  ? "busy"
+                  : "free"
+                }
+              ">
+
+              <b>
+                🪑 Masa
+                ${esc(
+                  table.table_number
+                )}
+              </b>
+
+              <small>
+
+                ${
+                  busy
+
+                  ? `
+                    ${tableOrders.length}
+                    aktif sipariş ·
+                    ${money(total)}
+                  `
+
+                  : "Boş"
+                }
+
+              </small>
+
+            </div>
+
+          `;
+
+        }
+      )
+      .join("")
+    ||
+    `
+      <div class="empty">
+        Aktif masa yok.
+      </div>
+    `;
+}
+
+
+function renderTables(){
+
+  renderTablesInto(
+    "tablesArea"
+  );
+}
+
+
+async function changeStatus(
+  id,
+  status
+){
+
+  const order =
+    orders.find(
+      item =>
+        item.id === id
+    );
+
+
+  if(!order){
+
+    return;
+
+  }
+
+
+  if(
+    order.order_type ===
+      "table"
+    &&
+    [
+      "completed",
+      "closed"
+    ]
+    .includes(
+      status
+    )
+    &&
+    order.payment_status !==
+      "paid"
+  ){
+
+    alert(
+      "Bu masa ödenmeden kapatılamaz. Önce ödeme yöntemini seç."
+    );
+
+    renderOrders();
+
+    return;
+  }
+
 
   const {error} =
     await db
       .from("orders")
       .update({
-        payment_status,
-        payment_method
+        status
       })
-      .eq("id",id);
+      .eq(
+        "id",
+        id
+      );
+
 
   if(error){
-    alert("Ödeme değiştirilemedi: " + error.message);
+
+    alert(
+      "Durum değiştirilemedi: " +
+      error.message
+    );
+
     return;
   }
 
-  loadOrders();
+
+  toast(
+    "Durum güncellendi."
+  );
+
+
+  await loadAll();
 }
 
-function loadTablesStatus(orders){
 
-  const area = document.getElementById("tablesStatus");
+async function changePayment(
+  id,
+  method
+){
 
-  const tables = [1,2,3,4];
+  const payload =
+    method
 
-  area.innerHTML = tables.map(tableNo => {
+    ? {
 
-    const tableOrders = orders.filter(order =>
-      order.order_type === "table" &&
-      order.tables?.table_number === tableNo
+        payment_status:
+          "paid",
+
+        payment_method:
+          method
+
+      }
+
+    : {
+
+        payment_status:
+          "unpaid",
+
+        payment_method:
+          null
+
+      };
+
+
+  const {error} =
+    await db
+      .from("orders")
+      .update(
+        payload
+      )
+      .eq(
+        "id",
+        id
+      );
+
+
+  if(error){
+
+    alert(
+      "Ödeme değiştirilemedi: " +
+      error.message
     );
 
-    const activeOrder = tableOrders.find(order =>
-      order.status !== "closed" &&
-      order.status !== "cancelled"
+    return;
+  }
+
+
+  toast(
+    "Ödeme güncellendi."
+  );
+
+
+  await loadAll();
+}
+
+
+function fillMetaSelects(){
+
+  const brandOptions =
+    '<option value="">Marka seç</option>'
+    +
+    brands
+      .map(
+        brand => `
+
+          <option value="${brand.id}">
+            ${esc(brand.name)}
+          </option>
+
+        `
+      )
+      .join("");
+
+
+  $("pBrand").innerHTML =
+    brandOptions;
+
+
+  $("productBrandFilter").innerHTML =
+    '<option value="all">Tüm Markalar</option>'
+    +
+    brands
+      .map(
+        brand => `
+
+          <option value="${brand.id}">
+            ${esc(brand.name)}
+          </option>
+
+        `
+      )
+      .join("");
+
+
+  fillCategorySelect();
+}
+
+
+function fillCategorySelect(
+  selectedId = null
+){
+
+  const brandId =
+    $("pBrand")
+      .value;
+
+
+  const filtered =
+    brandId
+
+    ? categories.filter(
+        category =>
+          String(
+            category.brand_id
+          )
+          ===
+          String(
+            brandId
+          )
+      )
+
+    : categories;
+
+
+  $("pCategory").innerHTML =
+    '<option value="">Kategori seç</option>'
+    +
+    filtered
+      .map(
+        category => `
+
+          <option value="${category.id}">
+            ${esc(category.name)}
+          </option>
+
+        `
+      )
+      .join("");
+
+
+  if(selectedId){
+
+    $("pCategory").value =
+      selectedId;
+
+  }
+}
+
+
+function slugify(
+  text
+){
+
+  return String(
+    text ||
+    "urun"
+  )
+  .toLocaleLowerCase(
+    "tr-TR"
+  )
+  .normalize(
+    "NFD"
+  )
+  .replace(
+    /[\u0300-\u036f]/g,
+    ""
+  )
+  .replace(
+    /ı/g,
+    "i"
+  )
+  .replace(
+    /ğ/g,
+    "g"
+  )
+  .replace(
+    /ü/g,
+    "u"
+  )
+  .replace(
+    /ş/g,
+    "s"
+  )
+  .replace(
+    /ö/g,
+    "o"
+  )
+  .replace(
+    /ç/g,
+    "c"
+  )
+  .replace(
+    /[^a-z0-9]+/g,
+    "-"
+  )
+  .replace(
+    /^-+|-+$/g,
+    ""
+  )
+  ||
+  "urun";
+}
+
+
+function renderProducts(){
+
+  if(
+    !$("productsBody")
+  ){
+    return;
+  }
+
+
+  let list =
+    [...products];
+
+
+  const query =
+    $("productSearch")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const brand =
+    $("productBrandFilter")
+      .value;
+
+
+  const availability =
+    $("productAvailabilityFilter")
+      .value;
+
+
+  if(query){
+
+    list =
+      list.filter(
+        product =>
+          (
+            product.name ||
+            ""
+          )
+          .toLowerCase()
+          .includes(query)
+      );
+
+  }
+
+
+  if(
+    brand !==
+    "all"
+  ){
+
+    list =
+      list.filter(
+        product =>
+          String(
+            product.brand_id
+          )
+          ===
+          brand
+      );
+
+  }
+
+
+  if(
+    availability ===
+    "available"
+  ){
+
+    list =
+      list.filter(
+        product =>
+          product.is_available
+      );
+
+  }
+
+
+  if(
+    availability ===
+    "hidden"
+  ){
+
+    list =
+      list.filter(
+        product =>
+          !product.is_available
+      );
+
+  }
+
+
+  $("productsBody").innerHTML =
+    list
+      .map(
+        product => {
+
+          const inventoryItem =
+            inventoryFor(
+              product.id
+            );
+
+
+          const stock =
+            Number(
+              inventoryItem.stock_qty ||
+              0
+            );
+
+
+          const minStock =
+            Number(
+              inventoryItem.min_stock ||
+              0
+            );
+
+
+          const stockClass =
+            stock <= 0
+
+            ? "out"
+
+            : stock <= minStock
+
+            ? "low"
+
+            : "ok";
+
+
+          return `
+
+            <tr>
+
+              <td>
+
+                ${
+                  product.image_url
+
+                  ? `
+
+                    <img
+                      class="thumb"
+                      src="${esc(product.image_url)}"
+                      alt="">
+
+                  `
+
+                  : `
+
+                    <div class="thumb">
+                    </div>
+
+                  `
+                }
+
+              </td>
+
+
+              <td>
+
+                <b>
+                  ${esc(product.name)}
+                </b>
+
+                <br>
+
+                <small class="muted">
+
+                  ${esc(
+                    (
+                      product.description ||
+                      ""
+                    )
+                    .slice(
+                      0,
+                      70
+                    )
+                  )}
+
+                </small>
+
+              </td>
+
+
+              <td>
+
+                ${esc(
+                  product.brands
+                    ?.name ||
+                  "-"
+                )}
+
+              </td>
+
+
+              <td>
+
+                ${esc(
+                  product.categories
+                    ?.name ||
+                  "-"
+                )}
+
+              </td>
+
+
+              <td>
+
+                ${money(
+                  product.price
+                )}
+
+              </td>
+
+
+              <td>
+
+                <span
+                  class="
+                    status-dot
+                    ${stockClass}
+                  ">
+                </span>
+
+                ${stock}
+
+              </td>
+
+
+              <td>
+
+                ${
+                  product.is_available
+
+                  ? "✅ Satışta"
+
+                  : "⛔ Gizli"
+                }
+
+              </td>
+
+
+              <td>
+
+                <div class="actions">
+
+                  <button
+                    class="mini"
+                    onclick="
+                      openProductModal(
+                        '${product.id}'
+                      )
+                    ">
+
+                    Düzenle
+
+                  </button>
+
+
+                  <button
+                    class="mini"
+                    onclick="
+                      toggleProduct(
+                        '${product.id}',
+                        ${!product.is_available}
+                      )
+                    ">
+
+                    ${
+                      product.is_available
+                      ? "Gizle"
+                      : "Satışa Aç"
+                    }
+
+                  </button>
+
+
+                  <button
+                    class="mini danger"
+                    onclick="
+                      deleteProduct(
+                        '${product.id}'
+                      )
+                    ">
+
+                    Sil
+
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          `;
+
+        }
+      )
+      .join("")
+    ||
+    `
+
+      <tr>
+
+        <td
+          colspan="8"
+          class="empty">
+
+          Ürün bulunamadı.
+
+        </td>
+
+      </tr>
+
+    `;
+}
+
+
+function openProductModal(
+  id = null
+){
+
+  $("productModal")
+    .classList
+    .remove("hidden");
+
+
+  $("productModalTitle")
+    .textContent =
+      id
+      ? "Ürünü Düzenle"
+      : "Yeni Ürün";
+
+
+  const product =
+    id
+    ? products.find(
+        item =>
+          item.id === id
+      )
+    : null;
+
+
+  const inventoryItem =
+    product
+    ? inventoryFor(
+        product.id
+      )
+    : {
+        stock_qty:0,
+        min_stock:5
+      };
+
+
+  $("productId").value =
+    product?.id ||
+    "";
+
+
+  $("pName").value =
+    product?.name ||
+    "";
+
+
+  $("pPrice").value =
+    product?.price ||
+    "";
+
+
+  $("pBrand").value =
+    product?.brand_id ||
+    "";
+
+
+  fillCategorySelect(
+    product?.category_id ||
+    null
+  );
+
+
+  $("pSort").value =
+    product?.sort_order ||
+    0;
+
+
+  $("pStock").value =
+    inventoryItem.stock_qty ||
+    0;
+
+
+  $("pMinStock").value =
+    inventoryItem.min_stock ??
+    5;
+
+
+  $("pDescription").value =
+    product?.description ||
+    "";
+
+
+  $("pImageUrl").value =
+    product?.image_url ||
+    "";
+
+
+  $("pAvailable").checked =
+    product?.is_available ??
+    true;
+
+
+  $("pBest").checked =
+    product?.is_best_seller ??
+    false;
+
+
+  $("pFeatured").checked =
+    product?.is_featured ??
+    false;
+
+
+  $("pImageFile").value =
+    "";
+
+
+  updatePreview();
+}
+
+
+function closeProductModal(){
+
+  $("productModal")
+    .classList
+    .add("hidden");
+}
+
+
+function updatePreview(){
+
+  const url =
+    $("pImageUrl")
+      .value
+      .trim();
+
+
+  if(url){
+
+    $("pPreview").src =
+      url;
+
+
+    $("pPreview")
+      .classList
+      .remove("hidden");
+
+  }
+  else{
+
+    $("pPreview")
+      .classList
+      .add("hidden");
+
+  }
+}
+
+
+$("pImageUrl")
+  .addEventListener(
+    "input",
+    updatePreview
+  );
+
+
+$("pImageFile")
+  .addEventListener(
+    "change",
+    () => {
+
+      const file =
+        $("pImageFile")
+          .files[0];
+
+
+      if(file){
+
+        $("pPreview").src =
+          URL.createObjectURL(
+            file
+          );
+
+
+        $("pPreview")
+          .classList
+          .remove("hidden");
+
+      }
+
+    }
+  );
+
+
+async function uploadProductImage(
+  file
+){
+
+  const extension =
+    (
+      file.name
+        .split(".")
+        .pop()
+      ||
+      "jpg"
+    )
+    .toLowerCase();
+
+
+  const name =
+    crypto.randomUUID()
+    +
+    "."
+    +
+    extension;
+
+
+  const {error} =
+    await db.storage
+      .from(
+        "product-images"
+      )
+      .upload(
+        name,
+        file,
+        {
+          upsert:false
+        }
+      );
+
+
+  if(error){
+
+    throw error;
+
+  }
+
+
+  const {data} =
+    db.storage
+      .from(
+        "product-images"
+      )
+      .getPublicUrl(
+        name
+      );
+
+
+  return data.publicUrl;
+}
+
+
+async function saveProduct(){
+
+  const id =
+    $("productId")
+      .value ||
+    null;
+
+
+  const name =
+    $("pName")
+      .value
+      .trim();
+
+
+  const price =
+    Number(
+      $("pPrice")
+        .value ||
+      0
     );
 
-    if(activeOrder){
 
-      return `
-        <div class="card">
-          <b>🪑 Masa ${tableNo}</b>
+  if(!name){
 
-          <div class="muted">
-            Aktif · ${activeOrder.order_number}
-          </div>
-        </div>
-      `;
+    alert(
+      "Ürün adı gerekli."
+    );
+
+    return;
+  }
+
+
+  let imageUrl =
+    $("pImageUrl")
+      .value
+      .trim();
+
+
+  const file =
+    $("pImageFile")
+      .files[0];
+
+
+  if(file){
+
+    try{
+
+      imageUrl =
+        await uploadProductImage(
+          file
+        );
+
+    }
+    catch(error){
+
+      alert(
+        "Görsel yüklenemedi: " +
+        error.message
+      );
+
+      return;
     }
 
-    return `
-      <div class="card">
-        <b>🪑 Masa ${tableNo}</b>
+  }
 
-        <div class="muted">
-          Boş
-        </div>
-      </div>
+
+  const payload = {
+
+    name,
+
+    description:
+      $("pDescription")
+        .value
+        .trim(),
+
+    price,
+
+    image_url:
+      imageUrl ||
+      null,
+
+    is_available:
+      $("pAvailable")
+        .checked,
+
+    is_best_seller:
+      $("pBest")
+        .checked,
+
+    is_featured:
+      $("pFeatured")
+        .checked,
+
+    sort_order:
+      Number(
+        $("pSort")
+          .value ||
+        0
+      ),
+
+    brand_id:
+      $("pBrand")
+        .value ||
+      null,
+
+    category_id:
+      $("pCategory")
+        .value ||
+      null
+
+  };
+
+
+  let productId =
+    id;
+
+
+  if(id){
+
+    const {error} =
+      await db
+        .from("products")
+        .update(
+          payload
+        )
+        .eq(
+          "id",
+          id
+        );
+
+
+    if(error){
+
+      alert(
+        "Ürün güncellenemedi: " +
+        error.message
+      );
+
+      return;
+    }
+
+  }
+  else{
+
+    const insertPayload = {
+
+      ...payload,
+
+      slug:
+        slugify(name)
+        +
+        "-"
+        +
+        Date.now()
+          .toString(36)
+
+    };
+
+
+    const {data,error} =
+      await db
+        .from("products")
+        .insert(
+          insertPayload
+        )
+        .select("id")
+        .single();
+
+
+    if(error){
+
+      alert(
+        "Ürün eklenemedi: " +
+        error.message
+      );
+
+      return;
+    }
+
+
+    productId =
+      data.id;
+
+  }
+
+
+  const inventoryPayload = {
+
+    product_id:
+      productId,
+
+    stock_qty:
+      Number(
+        $("pStock")
+          .value ||
+        0
+      ),
+
+    min_stock:
+      Number(
+        $("pMinStock")
+          .value ||
+        0
+      ),
+
+    updated_at:
+      new Date()
+        .toISOString()
+
+  };
+
+
+  const {
+    error:
+    inventoryError
+  } =
+    await db
+      .from("inventory")
+      .upsert(
+        inventoryPayload,
+        {
+          onConflict:
+            "product_id"
+        }
+      );
+
+
+  if(inventoryError){
+
+    console.warn(
+      "Stok kaydı yapılamadı:",
+      inventoryError.message
+    );
+
+  }
+
+
+  closeProductModal();
+
+
+  toast(
+    "Ürün kaydedildi."
+  );
+
+
+  await loadAll();
+}
+
+
+async function toggleProduct(
+  id,
+  value
+){
+
+  const {error} =
+    await db
+      .from("products")
+      .update({
+        is_available:
+          value
+      })
+      .eq(
+        "id",
+        id
+      );
+
+
+  if(error){
+
+    alert(
+      "Ürün güncellenemedi: " +
+      error.message
+    );
+
+    return;
+  }
+
+
+  await loadAll();
+}
+
+
+async function deleteProduct(
+  id
+){
+
+  if(
+    !confirm(
+      "Bu ürünü kaldırmak istediğine emin misin?"
+    )
+  ){
+
+    return;
+  }
+
+
+  const {error} =
+    await db
+      .from("products")
+      .delete()
+      .eq(
+        "id",
+        id
+      );
+
+
+  if(error){
+
+    const {
+      error:
+      hideError
+    } =
+      await db
+        .from("products")
+        .update({
+          is_available:false
+        })
+        .eq(
+          "id",
+          id
+        );
+
+
+    if(hideError){
+
+      alert(
+        "Ürün kaldırılamadı: " +
+        hideError.message
+      );
+
+      return;
+    }
+
+
+    toast(
+      "Ürün sipariş geçmişi nedeniyle silinemedi; satıştan gizlendi."
+    );
+
+  }
+  else{
+
+    toast(
+      "Ürün silindi."
+    );
+
+  }
+
+
+  await loadAll();
+}
+
+
+function renderStock(){
+
+  if(
+    !$("stockBody")
+  ){
+
+    return;
+  }
+
+
+  let list =
+    [...products];
+
+
+  const query =
+    $("stockSearch")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const filter =
+    $("stockFilter")
+      .value;
+
+
+  if(query){
+
+    list =
+      list.filter(
+        product =>
+          (
+            product.name ||
+            ""
+          )
+          .toLowerCase()
+          .includes(query)
+      );
+
+  }
+
+
+  if(
+    filter ===
+    "low"
+  ){
+
+    list =
+      list.filter(
+        product => {
+
+          const item =
+            inventoryFor(
+              product.id
+            );
+
+
+          return (
+            Number(
+              item.stock_qty
+            )
+            >
+            0
+            &&
+            Number(
+              item.stock_qty
+            )
+            <=
+            Number(
+              item.min_stock ||
+              0
+            )
+          );
+
+        }
+      );
+
+  }
+
+
+  if(
+    filter ===
+    "out"
+  ){
+
+    list =
+      list.filter(
+        product =>
+          Number(
+            inventoryFor(
+              product.id
+            )
+            .stock_qty
+          )
+          <=
+          0
+      );
+
+  }
+
+
+  $("stockBody").innerHTML =
+    list
+      .map(
+        product => {
+
+          const item =
+            inventoryFor(
+              product.id
+            );
+
+
+          const stock =
+            Number(
+              item.stock_qty ||
+              0
+            );
+
+
+          const minimum =
+            Number(
+              item.min_stock ||
+              0
+            );
+
+
+          const stockClass =
+            stock <= 0
+
+            ? "out"
+
+            : stock <= minimum
+
+            ? "low"
+
+            : "ok";
+
+
+          const stockText =
+            stock <= 0
+
+            ? "Tükendi"
+
+            : stock <= minimum
+
+            ? "Düşük"
+
+            : "Yeterli";
+
+
+          return `
+
+            <tr>
+
+              <td>
+
+                <b>
+                  ${esc(product.name)}
+                </b>
+
+              </td>
+
+
+              <td>
+                ${stock}
+              </td>
+
+
+              <td>
+                ${minimum}
+              </td>
+
+
+              <td>
+
+                <span
+                  class="
+                    status-dot
+                    ${stockClass}
+                  ">
+                </span>
+
+                ${stockText}
+
+              </td>
+
+
+              <td>
+
+                <div class="actions">
+
+                  <button
+                    class="mini"
+                    onclick="
+                      adjustStock(
+                        '${product.id}',
+                        -1
+                      )
+                    ">
+
+                    −1
+
+                  </button>
+
+
+                  <button
+                    class="mini"
+                    onclick="
+                      adjustStock(
+                        '${product.id}',
+                        1
+                      )
+                    ">
+
+                    +1
+
+                  </button>
+
+
+                  <button
+                    class="mini"
+                    onclick="
+                      setStock(
+                        '${product.id}'
+                      )
+                    ">
+
+                    Belirle
+
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          `;
+
+        }
+      )
+      .join("")
+    ||
+    `
+
+      <tr>
+
+        <td
+          colspan="5"
+          class="empty">
+
+          Stok kaydı yok.
+
+        </td>
+
+      </tr>
+
     `;
-
-  }).join("");
-}
-function updateStats(orders){
-
-  document.getElementById("newCount")
-    .textContent =
-      orders.filter(o => o.status === "new").length;
-
-  document.getElementById("prepCount")
-    .textContent =
-      orders.filter(o => o.status === "preparing").length;
-
-  document.getElementById("readyCount")
-    .textContent =
-      orders.filter(o => o.status === "ready").length;
 }
 
 
-checkLogin();
+async function adjustStock(
+  productId,
+  delta
+){
+
+  const item =
+    inventoryFor(
+      productId
+    );
+
+
+  const next =
+    Math.max(
+      0,
+      Number(
+        item.stock_qty ||
+        0
+      )
+      +
+      delta
+    );
+
+
+  const {error} =
+    await db
+      .from("inventory")
+      .upsert(
+        {
+
+          product_id:
+            productId,
+
+          stock_qty:
+            next,
+
+          min_stock:
+            Number(
+              item.min_stock ||
+              0
+            ),
+
+          updated_at:
+            new Date()
+              .toISOString()
+
+        },
+        {
+          onConflict:
+            "product_id"
+        }
+      );
+
+
+  if(error){
+
+    alert(
+      "Stok güncellenemedi: " +
+      error.message
+    );
+
+    return;
+  }
+
+
+  await loadAll();
+}
+
+
+async function setStock(
+  productId
+){
+
+  const item =
+    inventoryFor(
+      productId
+    );
+
+
+  const quantity =
+    prompt(
+      "Yeni stok adedi:",
+      item.stock_qty
+    );
+
+
+  const minimum =
+    prompt(
+      "Minimum stok:",
+      item.min_stock
+    );
+
+
+  if(
+    quantity === null
+    ||
+    minimum === null
+  ){
+
+    return;
+  }
+
+
+  const {error} =
+    await db
+      .from("inventory")
+      .upsert(
+        {
+
+          product_id:
+            productId,
+
+          stock_qty:
+            Math.max(
+              0,
+              Number(
+                quantity ||
+                0
+              )
+            ),
+
+          min_stock:
+            Math.max(
+              0,
+              Number(
+                minimum ||
+                0
+              )
+            ),
+
+          updated_at:
+            new Date()
+              .toISOString()
+
+        },
+        {
+          onConflict:
+            "product_id"
+        }
+      );
+
+
+  if(error){
+
+    alert(
+      "Stok güncellenemedi: " +
+      error.message
+    );
+
+    return;
+  }
+
+
+  await loadAll();
+}
+
+
+function renderReports(){
+
+  const today =
+    new Date();
+
+
+  today.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+
+  const todaysOrders =
+    orders.filter(
+      order =>
+
+        new Date(
+          order.created_at
+        )
+        >=
+        today
+
+        &&
+
+        order.status !==
+        "cancelled"
+
+    );
+
+
+  const revenue =
+    todaysOrders
+      .filter(
+        order =>
+          order.payment_status ===
+          "paid"
+      )
+      .reduce(
+        (
+          total,
+          order
+        ) =>
+          total +
+          Number(
+            order.total ||
+            0
+          ),
+        0
+      );
+
+
+  $("reportTodayRevenue").textContent =
+    money(revenue);
+
+
+  $("reportTodayOrders").textContent =
+    todaysOrders.length;
+
+
+  $("reportAvg").textContent =
+    money(
+
+      todaysOrders.length
+
+      ? revenue /
+        todaysOrders.length
+
+      : 0
+
+    );
+
+
+  const productMap = {};
+
+
+  todaysOrders
+    .forEach(
+      order =>
+
+        (
+          order.order_items ||
+          []
+        )
+        .forEach(
+          item => {
+
+            const key =
+              item.product_name ||
+              "Ürün";
+
+
+            if(
+              !productMap[key]
+            ){
+
+              productMap[key] = {
+
+                quantity:
+                  0,
+
+                revenue:
+                  0
+
+              };
+
+            }
+
+
+            productMap[key]
+              .quantity
+              +=
+              Number(
+                item.quantity ||
+                1
+              );
+
+
+            productMap[key]
+              .revenue
+              +=
+              Number(
+                item.quantity ||
+                1
+              )
+              *
+              Number(
+                item.unit_price ||
+                0
+              );
+
+          }
+        )
+
+    );
+
+
+  $("bestSellersBody").innerHTML =
+    Object
+      .entries(
+        productMap
+      )
+      .sort(
+        (
+          first,
+          second
+        ) =>
+          second[1]
+            .quantity
+          -
+          first[1]
+            .quantity
+      )
+      .slice(
+        0,
+        10
+      )
+      .map(
+        (
+          [
+            name,
+            values
+          ]
+        ) => `
+
+          <tr>
+
+            <td>
+              ${esc(name)}
+            </td>
+
+            <td>
+              ${values.quantity}
+            </td>
+
+            <td>
+              ${money(values.revenue)}
+            </td>
+
+          </tr>
+
+        `
+      )
+      .join("")
+    ||
+    `
+
+      <tr>
+
+        <td
+          colspan="3"
+          class="empty">
+
+          Bugün satış yok.
+
+        </td>
+
+      </tr>
+
+    `;
+}
+
+
+async function boot(){
+
+  const {
+    data:{
+      session
+    }
+  } =
+    await db.auth
+      .getSession();
+
+
+  if(session){
+
+    await showApp();
+
+  }
+  else{
+
+    $("loginView")
+      .classList
+      .remove("hidden");
+
+  }
+}
+
+
+db.auth.onAuthStateChange(
+  async(
+    event,
+    session
+  ) => {
+
+    if(
+      event ===
+      "SIGNED_OUT"
+    ){
+
+      $("appView")
+        .classList
+        .add("hidden");
+
+
+      $("loginView")
+        .classList
+        .remove("hidden");
+
+    }
+
+
+    if(
+      event ===
+      "SIGNED_IN"
+      &&
+      session
+    ){
+
+      await showApp();
+
+    }
+
+  }
+);
+
+
+boot();
 
 </script>
 
