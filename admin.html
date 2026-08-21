@@ -106,7 +106,13 @@ button{
 
 
 <div class="stats">
+<div class="card">
+  <h2>🪑 Masalar</h2>
 
+  <div id="tablesStatus">
+    Masalar yükleniyor...
+  </div>
+</div>
   <div class="stat">
     <span>Yeni</span>
     <b id="newCount">0</b>
@@ -261,6 +267,7 @@ async function loadOrders(){
 
   area.innerHTML =
     orders.map(orderCard).join("");
+  loadTablesStatus(orders);
 }
 
 
@@ -470,7 +477,49 @@ async function changePayment(id,method){
   loadOrders();
 }
 
+function loadTablesStatus(orders){
 
+  const area = document.getElementById("tablesStatus");
+
+  const tables = [1,2,3,4];
+
+  area.innerHTML = tables.map(tableNo => {
+
+    const tableOrders = orders.filter(order =>
+      order.order_type === "table" &&
+      order.tables?.table_number === tableNo
+    );
+
+    const activeOrder = tableOrders.find(order =>
+      order.status !== "closed" &&
+      order.status !== "cancelled"
+    );
+
+    if(activeOrder){
+
+      return `
+        <div class="card">
+          <b>🪑 Masa ${tableNo}</b>
+
+          <div class="muted">
+            Aktif · ${activeOrder.order_number}
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="card">
+        <b>🪑 Masa ${tableNo}</b>
+
+        <div class="muted">
+          Boş
+        </div>
+      </div>
+    `;
+
+  }).join("");
+}
 function updateStats(orders){
 
   document.getElementById("newCount")
