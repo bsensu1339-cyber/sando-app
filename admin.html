@@ -435,6 +435,58 @@ function statusOptions(current, orderType){
 
 async function changeStatus(id,status){
 
+  if(status === "closed"){
+
+    const {data: order, error: readError} = await db
+      .from("orders")
+      .select("payment_status, payment_method")
+      .eq("id", id)
+      .single();
+
+    if(readError){
+      alert("Sipariş bilgisi alınamadı: " + readError.message);
+      loadOrders();
+      return;
+    }
+
+    if(order.payment_status !== "paid"){
+      alert("Bu masa kapatılamaz. Önce ödeme alınmalı.");
+      loadOrders();
+      return;
+    }
+
+    const method =
+      order.payment_method === "cash"
+        ? "Nakit"
+        : order.payment_method === "card"
+        ? "Kart"
+        : "Ödeme";
+
+    const approved = confirm(
+      method + " ödeme alınmış görünüyor. Masa kapatılsın mı?"
+    );
+
+    if(!approved){
+      loadOrders();
+      return;
+    }
+  }
+
+  const {error} =
+    await db
+      .from("orders")
+      .update({status})
+      .eq("id",id);
+
+  if(error){
+    alert("Durum değiştirilemedi: " + error.message);
+    loadOrders();
+    return;
+  }
+
+  loadOrders();
+}
+
   const {error} =
     await db
       .from("orders")
