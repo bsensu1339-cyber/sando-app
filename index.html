@@ -408,6 +408,28 @@
     </div>
 
     <button class="cta" onclick="loadOrderStatus()">
+    let trackingInterval = null;
+
+function startTracking(){
+
+  if(trackingInterval){
+    clearInterval(trackingInterval);
+  }
+
+  loadOrderStatus();
+
+  trackingInterval = setInterval(() => {
+    loadOrderStatus();
+  }, 5000);
+}
+
+function stopTracking(){
+
+  if(trackingInterval){
+    clearInterval(trackingInterval);
+    trackingInterval = null;
+  }
+}  
       Durumu Yenile
     </button>
 
@@ -575,7 +597,9 @@ if(activeTableId && activeTable){
   }
 }
 function go(id){
-
+if(id !== "tracking"){
+  stopTracking();
+}
   document
   .querySelectorAll(".screen")
   .forEach(el => el.classList.remove("active"));
@@ -882,7 +906,7 @@ async function showOrderTracking(orderId, orderNumber){
     "Sipariş No: " + orderNumber;
 
   go("tracking");
-
+startTracking();
   await loadOrderStatus(orderId);
 }
  async function loadOrderStatus(orderId = null){
