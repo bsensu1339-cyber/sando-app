@@ -736,18 +736,79 @@ function removeCart(index){
 }
 
 
-function demoOrder(){
+async function demoOrder(){
 
   if(cart.length === 0){
-
     alert("Önce sepete ürün ekle.");
-
     return;
   }
 
+  const customerName = prompt("Gel-Al için adınızı yazın:");
+
+  if(!customerName){
+    alert("Ad gerekli.");
+    return;
+  }
+
+  const customerPhone = prompt("Telefon numaranızı yazın:");
+
+  if(!customerPhone){
+    alert("Telefon gerekli.");
+    return;
+  }
+
+  const total = cart.reduce(
+    (sum, product) => sum + Number(product.price || 0),
+    0
+  );
+
+  const orderNumber = "SL-" + Date.now().toString().slice(-6);
+
+  const { data: order, error: orderError } = await db
+    .from("orders")
+    .insert({
+      order_number: orderNumber,
+      order_type: "pickup",
+      status: "new",
+      payment_status: "unpaid",
+      total: total,
+      customer_note:
+        customerName + " | " + customerPhone
+    })
+    .select()
+    .single();
+
+  if(orderError){
+    console.error(orderError);
+    alert("Sipariş oluşturulamadı: " + orderError.message);
+    return;
+  }
+
+  const items = cart.map(product => ({
+    order_id: order.id,
+    product_id: product.id,
+    product_name: product.name,
+    quantity: 1,
+    unit_price: Number(product.price || 0),
+    options: [],
+    note: null
+  }));
+
+  const { error: itemsError } = await db
+    .from("order_items")
+    .insert(items);
+
+  if(itemsError){
+    console.error(itemsError);
+    alert("Sipariş ürünleri kaydedilemedi: " + itemsError.message);
+    return;
+  }
+
+  cart = [];
+  renderCart();
 
   alert(
-    "Sepet çalışıyor. Bir sonraki aşamada bu siparişi Supabase sipariş tablosuna kaydedeceğiz."
+    "Siparişiniz alındı! Sipariş numaranız: " + orderNumber
   );
 }
 
