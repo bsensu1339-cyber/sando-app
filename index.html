@@ -597,9 +597,10 @@ if(activeTableId && activeTable){
   }
 }
 function go(id){
-if(id !== "tracking"){
-  stopTracking();
-}
+
+  document
+  .querySelectorAll(".screen")
+  .forEach(el => el.classList.remove("active"));
   document
   .querySelectorAll(".screen")
   .forEach(el => el.classList.remove("active"));
