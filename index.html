@@ -515,20 +515,41 @@ async function detectTable(){
   }
 }orderMode = "table";
 
-const pickupBtn = document.getElementById("pickupBtn");
-const tableInfo = document.getElementById("tableOrderInfo");
-const tableText = document.getElementById("tableOrderText");
+if(activeTableId && activeTable){
 
-if(pickupBtn){
-  pickupBtn.style.display = "none";
-}
+  orderMode = "table";
 
-if(tableInfo){
-  tableInfo.style.display = "block";
-}
+  const pickupBtn = document.getElementById("pickupBtn");
+  const tableInfo = document.getElementById("tableOrderInfo");
+  const tableText = document.getElementById("tableOrderText");
 
-if(tableText){
-  tableText.textContent = "Masa " + activeTable + " seçildi";
+  if(pickupBtn){
+    pickupBtn.style.display = "none";
+  }
+
+  if(tableInfo){
+    tableInfo.style.display = "block";
+  }
+
+  if(tableText){
+    tableText.textContent = "Masa " + activeTable + " seçildi";
+  }
+
+}else{
+
+  orderMode = "pickup";
+
+  const pickupBtn = document.getElementById("pickupBtn");
+  const tableInfo = document.getElementById("tableOrderInfo");
+
+  if(pickupBtn){
+    pickupBtn.style.display = "block";
+    pickupBtn.textContent = "📦 Gel-Al Seç";
+  }
+
+  if(tableInfo){
+    tableInfo.style.display = "none";
+  }
 }
 function go(id){
 
