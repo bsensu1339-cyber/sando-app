@@ -771,7 +771,63 @@ function removeCart(index){
 
 
 async function demoOrder(){
+if(activeTableId){
 
+    const total = cart.reduce(
+      (sum, product) => sum + Number(product.price || 0),
+      0
+    );
+
+    const orderNumber = "M-" + Date.now().toString().slice(-6);
+    const orderId = crypto.randomUUID();
+
+    const { error: orderError } = await db
+      .from("orders")
+      .insert({
+        id: orderId,
+        order_number: orderNumber,
+        table_id: activeTableId,
+        order_type: "table",
+        status: "new",
+        payment_status: "unpaid",
+        total: total
+      });
+
+    if(orderError){
+      alert("Masa siparişi oluşturulamadı: " + orderError.message);
+      return;
+    }
+
+    const items = cart.map(product => ({
+      order_id: orderId,
+      product_id: product.id,
+      product_name: product.name,
+      quantity: 1,
+      unit_price: Number(product.price || 0),
+      options: [],
+      note: null
+    }));
+
+    const { error: itemsError } = await db
+      .from("order_items")
+      .insert(items);
+
+    if(itemsError){
+      alert("Sipariş ürünleri kaydedilemedi: " + itemsError.message);
+      return;
+    }
+
+    cart = [];
+    renderCart();
+
+    alert(
+      "Masa " + activeTable +
+      " siparişiniz alındı! Sipariş numaranız: " +
+      orderNumber
+    );
+
+    return;
+  }
   if(cart.length === 0){
     alert("Önce sepete ürün ekle.");
     return;
@@ -848,6 +904,7 @@ const { error: orderError } = await db
 }
 
 
+detectTable();
 loadProducts();
 renderCart();
 
