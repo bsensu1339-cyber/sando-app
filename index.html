@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4efe7"><link rel="manifest" href="manifest.json">
+<title>Sando • Toastiq • CRAVÉ</title>
+<style>
+:root{--bg:#f4efe7;--ink:#171717;--muted:#756f67;--card:#fff;--line:#e4ddd3;--orange:#f36d2f}
+*{box-sizing:border-box}body{margin:0;background:#ddd;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+.app{max-width:430px;min-height:100vh;margin:auto;background:var(--bg);padding-bottom:82px}
+header{padding:22px 18px 10px;display:flex;justify-content:space-between;align-items:center}.logo{font-size:13px;font-weight:900;letter-spacing:.08em}.tag{font-size:10px;color:var(--muted)}
+main{padding:0 17px}.hero{padding:18px 0 10px}.hero h1{font-size:31px;line-height:1.02;margin:0 0 9px}.hero p{margin:0;color:var(--muted);font-size:14px}
+.brands{display:grid;gap:11px;margin:14px 0 22px}.brand{border:0;border-radius:22px;padding:20px;text-align:left;min-height:110px;box-shadow:0 7px 20px #0000000b}.brand b{font-size:21px}.brand span{display:block;margin-top:7px;color:#5d5851}
+.sando{background:#e5dacb}.toast{background:#f1d8c6}.crave{background:#edd9df}.section{display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px}.section h2{font-size:18px;margin:0}
+.products{display:grid;grid-template-columns:1fr 1fr;gap:11px}.product,.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px}.card{margin:10px 0;padding:16px}.photo{height:104px;border-radius:14px;background:linear-gradient(135deg,#eee5d9,#cbbdac);display:grid;place-items:center;font-size:38px}
+.product h3{font-size:14px;margin:10px 0 5px}.price{font-weight:800}.add,.cta{border:0;background:#171717;color:#fff;border-radius:12px;font-weight:750}.add{width:100%;padding:10px;margin-top:9px}.cta{width:100%;padding:14px;margin-top:12px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.muted{color:var(--muted);font-size:12px}.big{font-size:27px;font-weight:850}.pill{font-size:10px;background:#171717;color:#fff;padding:6px 9px;border-radius:20px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:9px}.choice button{padding:13px;border:1px solid var(--line);background:#fff;border-radius:13px}
+.reward{background:#171717;color:#fff;border-radius:20px;padding:20px;margin:12px 0}.stamps{display:flex;gap:6px;margin-top:12px}.stamps i{width:30px;height:30px;border:1px solid #888;border-radius:50%;display:grid;place-items:center;font-style:normal}
+.screen{display:none}.screen.active{display:block}.nav{position:fixed;bottom:0;width:min(430px,100vw);height:70px;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:10}.nav button{border:0;background:#fff;color:#666;font-size:10px}.nav b{display:block;font-size:18px;margin-bottom:3px}
+.status{display:flex;gap:5px;margin:12px 0}.status span{height:5px;flex:1;border-radius:8px;background:#ddd}.status span.on{background:#171717}
+</style></head>
+<body><div class="app">
+<header><div class="logo">SANDO LAB · TOASTIQ · CRAVÉ</div><div class="tag">Ödeme mağazada</div></header>
+
+<section id="home" class="screen active"><main>
+<div class="hero"><h1>Bugün ne yemek istersin?</h1><p>Masada sipariş ver veya Gel-Al. Puanını biriktir.</p></div>
+<div class="brands">
+<button class="brand sando" onclick="brand('SANDO LAB','🥪')"><b>🥪 SANDO LAB</b><span>Sandwich & Sando</span></button>
+<button class="brand toast" onclick="brand('TOASTIQ','🍞')"><b>🍞 TOASTIQ</b><span>Toast</span></button>
+<button class="brand crave" onclick="brand('CRAVÉ','🍓')"><b>🍓 CRAVÉ</b><span>Waffle & Sweets</span></button>
+</div>
+<div class="section"><h2>🔥 Çok Satanlar</h2><span class="muted">Otomatik + öne çıkar</span></div>
+<div class="products">
+<div class="product"><div class="photo">🥪</div><h3>Sando Burger</h3><div class="price">— TL</div><button class="add" onclick="add('Sando Burger')">Sepete Ekle</button></div>
+<div class="product"><div class="photo">🍓</div><h3>CRAVÉ Waffle</h3><div class="price">— TL</div><button class="add" onclick="add('CRAVÉ Waffle')">Sepete Ekle</button></div>
+</div>
+<div class="section"><h2>📦 Son Sipariş</h2></div><div class="card"><b>Henüz sipariş yok</b><p class="muted">Tamamlanan siparişler burada görünecek ve tek dokunuşla tekrarlanabilecek.</p></div>
+</main></section>
+
+<section id="menu" class="screen"><main><div class="hero"><h1>Menü</h1><p>Üç marka, kendi kimliğiyle tek uygulamada.</p></div>
+<div class="choice"><button onclick="brand('SANDO LAB','🥪')">🥪 Sando Lab</button><button onclick="brand('TOASTIQ','🍞')">🍞 Toastiq</button></div>
+<div style="margin-top:9px"><button class="cta" onclick="brand('CRAVÉ','🍓')">🍓 CRAVÉ</button></div><div id="brandArea"></div></main></section>
+
+<section id="cart" class="screen"><main><div class="hero"><h1>Sepet</h1><p id="cartCount">Sepet boş.</p></div><div id="cartItems"></div>
+<div class="card"><div class="row"><b>Sipariş türü</b><span id="type" class="pill">Seçilmedi</span></div><div class="choice" style="margin-top:12px"><button onclick="otype('Masa')">🪑 Masada</button><button onclick="otype('Gel-Al')">📦 Gel-Al</button></div>
+<p class="muted">Gel-Al için tahmini hazırlanma süresi işletme panelinden belirlenecek.</p><div class="row"><b>Ödeme</b><b>Nakit / Kart</b></div><button class="cta" onclick="checkout()">Siparişi Tamamla</button></div></main></section>
+
+<section id="rewards" class="screen"><main><div class="hero"><h1>Ödüllerim</h1><p>Damga + ortak puan sistemi.</p></div>
+<div class="reward"><span class="muted" style="color:#bbb">TOPLAM PUAN</span><div class="big">0</div><p style="font-size:12px">10 TL = 1 puan temel kuralı. TL karşılığı daha sonra kârlılığa göre ayarlanacak.</p></div>
+<div class="card"><b>🥪 Sando Lab · 0/6</b><div class="stamps"><i></i><i></i><i></i><i></i><i></i><i>🎁</i></div></div>
+<div class="card"><b>🍞 Toastiq · 0/6</b><div class="stamps"><i></i><i></i><i></i><i></i><i></i><i>🎁</i></div></div>
+<div class="card"><b>🍓 CRAVÉ · 0/5</b><div class="stamps"><i></i><i></i><i></i><i></i><i>🎁</i></div></div></main></section>
+
+<section id="profile" class="screen"><main><div class="hero"><h1>Profil</h1><p>Misafir sipariş açık. Üyelik ödüller için.</p></div>
+<div class="card"><div class="row"><b>Misafir Kullanıcı</b><span class="pill">BRONZE</span></div><p class="muted">Hesap oluşturduğunda puan, damga, favoriler ve sipariş geçmişi tutulacak.</p><button class="cta">Ücretsiz Hesap Oluştur</button></div>
+<div class="card"><b>📍 Mağaza Bilgileri</b><p class="muted">Konum · Çalışma saatleri · İletişim</p></div></main></section>
+
+<nav class="nav"><button onclick="go('home')"><b>⌂</b>Ana Sayfa</button><button onclick="go('menu')"><b>☰</b>Menü</button><button onclick="go('cart')"><b>🛒</b>Sepet</button><button onclick="go('rewards')"><b>★</b>Ödüller</button><button onclick="go('profile')"><b>●</b>Profil</button></nav>
+</div>
+<script>
+let cart=[], typ='';
+function go(x){document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));document.getElementById(x).classList.add('active');scrollTo(0,0)}
+function brand(n,e){go('menu');document.getElementById('brandArea').innerHTML=`<div class="section"><h2>${n}</h2><span class="pill">Menü</span></div><div class="products"><div class="product"><div class="photo">${e}</div><h3>${n==='SANDO LAB'?'Sando Burger':n==='TOASTIQ'?'Classic Toast':'CRAVÉ Waffle'}</h3><div class="price">— TL</div><button class="add" onclick="add('${n} ürün 1')">Sepete Ekle</button></div><div class="product"><div class="photo">✨</div><h3>Örnek Ürün</h3><div class="price">— TL</div><button class="add" onclick="add('${n} ürün 2')">Sepete Ekle</button></div></div>`}
+function add(x){cart.push(x);render();alert('Sepete eklendi');}
+function render(){document.getElementById('cartCount').innerText=cart.length?cart.length+' ürün var.':'Sepet boş.';document.getElementById('cartItems').innerHTML=cart.map((x,i)=>`<div class="card"><div class="row"><b>${x}</b><button onclick="cart.splice(${i},1);render()">Sil</button></div><p class="muted">Ekstralar ve fiyat ürün editöründen gelecek.</p></div>`).join('')}
+function otype(x){typ=x;document.getElementById('type').innerText=x}
+function checkout(){if(!cart.length)return alert('Sepete ürün ekle.');if(!typ)return alert('Masada veya Gel-Al seç.');alert('MVP akışı tamam: sipariş mağazada ödenecek.')}
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script></body></html>

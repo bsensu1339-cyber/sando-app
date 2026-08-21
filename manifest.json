@@ -1,0 +1,8 @@
+{
+  "name": "Sando Lab • Toastiq • CRAVÉ",
+  "short_name": "SANDO",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4efe7",
+  "theme_color": "#f4efe7"
+}
