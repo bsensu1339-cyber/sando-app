@@ -764,19 +764,20 @@ async function demoOrder(){
 
   const orderNumber = "SL-" + Date.now().toString().slice(-6);
 
-  const { data: order, error: orderError } = await db
-    .from("orders")
-    .insert({
-      order_number: orderNumber,
-      order_type: "pickup",
-      status: "new",
-      payment_status: "unpaid",
-      total: total,
-      customer_note:
-        customerName + " | " + customerPhone
-    })
-    .select()
-    .single();
+  const orderId = crypto.randomUUID();
+
+const { error: orderError } = await db
+  .from("orders")
+  .insert({
+    id: orderId,
+    order_number: orderNumber,
+    order_type: "pickup",
+    status: "new",
+    payment_status: "unpaid",
+    total: total,
+    customer_note:
+      customerName + " | " + customerPhone
+  });
 
   if(orderError){
     console.error(orderError);
@@ -785,7 +786,7 @@ async function demoOrder(){
   }
 
   const items = cart.map(product => ({
-    order_id: order.id,
+    order_id: orderId,
     product_id: product.id,
     product_name: product.name,
     quantity: 1,
