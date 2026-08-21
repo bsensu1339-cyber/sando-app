@@ -486,22 +486,6 @@ async function changeStatus(id,status){
 
   loadOrders();
 }
-
-  const {error} =
-    await db
-      .from("orders")
-      .update({status})
-      .eq("id",id);
-
-  if(error){
-    alert("Durum değiştirilemedi: " + error.message);
-    return;
-  }
-
-  loadOrders();
-}
-
-
 async function changePayment(id,method){
 
   let payment_status = "unpaid";
