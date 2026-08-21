@@ -218,14 +218,17 @@ async function loadOrders(){
     await db
       .from("orders")
       .select(`
-        *,
-        order_items (
-          id,
-          product_name,
-          quantity,
-          unit_price
-        )
-      `)
+  *,
+  tables (
+    table_number
+  ),
+  order_items (
+    id,
+    product_name,
+    quantity,
+    unit_price
+  )
+`)
       .order("created_at",{ascending:false});
 
 
@@ -263,10 +266,10 @@ async function loadOrders(){
 
 function orderCard(order){
 
-  const type =
-    order.order_type === "table"
-      ? "🪑 MASA"
-      : "📦 GEL-AL";
+ const type =
+  order.order_type === "table"
+    ? "🪑 MASA " + (order.tables?.table_number || "?")
+    : "📦 GEL-AL";
 
   const customer =
     order.customer_note || "Misafir";
