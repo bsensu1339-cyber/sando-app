@@ -407,8 +407,9 @@
       </div>
     </div>
 
-    <button class="cta" onclick="loadOrderStatus()">
-    let trackingInterval = null;
+    <button class="cta" onclick="loadOrderStatus()"> 
+}  
+       let trackingInterval = null;
 
 function startTracking(){
 
@@ -429,7 +430,6 @@ function stopTracking(){
     clearInterval(trackingInterval);
     trackingInterval = null;
   }
-}  
       Durumu Yenile
     </button>
 
@@ -1197,6 +1197,7 @@ document.getElementById("trackingStatus").innerHTML =
   "🟡 <b>Sipariş alındı</b>";
 
 go("tracking");
+  startTracking();
 }
 
 
