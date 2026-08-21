@@ -885,7 +885,103 @@ async function showOrderTracking(orderId, orderNumber){
 
   await loadOrderStatus(orderId);
 }
-  async function loadOrderStatus(orderId = null){
+ async function loadOrderStatus(orderId = null){
+
+  const id =
+    orderId || localStorage.getItem("lastOrderId");
+
+  const area =
+    document.getElementById("trackingStatus");
+
+  if(!id){
+
+    area.innerHTML =
+      "Sipariş bilgisi bulunamadı.";
+
+    return;
+  }
+
+
+  area.innerHTML =
+    "Sipariş durumu kontrol ediliyor...";
+
+
+  const {data,error} = await db.rpc(
+    "get_order_status",
+    {
+      p_order_id: id
+    }
+  );
+
+
+  if(error){
+
+    console.error(error);
+
+    area.innerHTML =
+      "Sipariş durumu alınamadı.";
+
+    return;
+  }
+
+
+  const order =
+    data && data.length > 0
+      ? data[0]
+      : null;
+
+
+  if(!order){
+
+    area.innerHTML =
+      "Sipariş bulunamadı.";
+
+    return;
+  }
+
+
+  const statusNames = {
+
+    new:
+      "🟡 Sipariş alındı",
+
+    confirmed:
+      "🟡 Sipariş onaylandı",
+
+    preparing:
+      "🟠 Hazırlanıyor",
+
+    ready:
+      "🟢 Hazır — Teslim alabilirsiniz",
+
+    customer_arrived:
+      "🔵 Müşteri geldi",
+
+    completed:
+      "✅ Teslim edildi",
+
+    cancelled:
+      "❌ Sipariş iptal edildi"
+
+  };
+
+
+  area.innerHTML = `
+
+    <b>
+      ${statusNames[order.status] || order.status}
+    </b>
+
+    <p class="small">
+      ${
+        order.payment_status === "paid"
+        ? "✅ Ödeme alındı"
+        : "💳 Ödeme mağazada yapılacak"
+      }
+    </p>
+
+  `;
+}
 
   const id =
     orderId || localStorage.getItem("lastOrderId");
