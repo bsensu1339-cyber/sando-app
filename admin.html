@@ -332,7 +332,7 @@ function orderCard(order){
           this.value
         )">
 
-        ${statusOptions(order.status)}
+        ${statusOptions(order.status, order.order_type)}
 
       </select>
 
@@ -387,9 +387,19 @@ function statusName(status){
 }
 
 
-function statusOptions(current){
+function statusOptions(current, orderType){
 
-  const statuses = [
+  const tableStatuses = [
+    ["new","Yeni"],
+    ["confirmed","Onaylandı"],
+    ["preparing","Hazırlanıyor"],
+    ["ready","Hazır"],
+    ["served","Servis Edildi"],
+    ["closed","Masa Kapatıldı"],
+    ["cancelled","İptal"]
+  ];
+
+  const pickupStatuses = [
     ["new","Yeni"],
     ["confirmed","Onaylandı"],
     ["preparing","Hazırlanıyor"],
@@ -398,6 +408,11 @@ function statusOptions(current){
     ["completed","Teslim Edildi"],
     ["cancelled","İptal"]
   ];
+
+  const statuses =
+    orderType === "table"
+      ? tableStatuses
+      : pickupStatuses;
 
   return statuses
     .map(([value,label]) => `
