@@ -986,53 +986,7 @@ startTracking();
 
   `;
 }
-async function loadOrderStatus(orderId = null){
-  const id =
-    orderId || localStorage.getItem("lastOrderId");
-
-  if(!id) return;
-
-  const { data, error } = await db.rpc(
-  "get_order_status",
-  {
-    p_order_id: id
-  }
-);
-
-const order =
-  data && data.length > 0
-    ? data[0]
-    : null;
-
-  const area = document.getElementById("trackingStatus");
-
-  if(error){
-    area.innerHTML =
-      "Sipariş durumu alınamadı.";
-    return;
-  }
-
-  const statusNames = {
-    new:"🟡 Sipariş alındı",
-    confirmed:"🟡 Onaylandı",
-    preparing:"🟠 Hazırlanıyor",
-    ready:"🟢 Hazır — Teslim alabilirsiniz",
-    customer_arrived:"🔵 Müşteri geldi",
-    completed:"✅ Teslim edildi",
-    cancelled:"❌ İptal edildi"
-  };
-
-  area.innerHTML = `
-    <b>${statusNames[data.status] || data.status}</b>
-
-    <p class="small">
-      Ödeme:
-      ${data.payment_status === "paid"
-        ? "Ödendi"
-        : "Mağazada ödenecek"}
-    </p>
-  `;
-}
+function removeCart(index){
   cart.splice(index,1);
 
   renderCart();
