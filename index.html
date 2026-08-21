@@ -1176,13 +1176,71 @@ go("tracking");
 
 
 detectTable();
+async function loadOrderStatus(){
+
+  const id = localStorage.getItem("lastOrderId");
+  const area = document.getElementById("trackingStatus");
+
+  if(!area) return;
+
+  if(!id){
+    area.innerHTML = "Sipariş bilgisi bulunamadı.";
+    return;
+  }
+
+  area.innerHTML = "⏳ Durum kontrol ediliyor...";
+
+  const { data, error } = await db.rpc(
+    "get_order_status",
+    {
+      p_order_id: id
+    }
+  );
+
+  if(error){
+    console.error("Sipariş takip hatası:", error);
+    area.innerHTML = "❌ Sipariş durumu alınamadı.";
+    return;
+  }
+
+  const order =
+    data && data.length > 0
+      ? data[0]
+      : null;
+
+  if(!order){
+    area.innerHTML = "Sipariş bulunamadı.";
+    return;
+  }
+
+  const statusNames = {
+    new: "🟡 Sipariş alındı",
+    confirmed: "🟡 Sipariş onaylandı",
+    preparing: "🟠 Hazırlanıyor",
+    ready: "🟢 Hazır — Teslim alabilirsiniz",
+    customer_arrived: "🔵 Müşteri geldi",
+    completed: "✅ Teslim edildi",
+    cancelled: "❌ Sipariş iptal edildi"
+  };
+
+  area.innerHTML = `
+    <b>${statusNames[order.status] || order.status}</b>
+    <p class="small">
+      ${
+        order.payment_status === "paid"
+          ? "✅ Ödeme alındı"
+          : "💳 Ödeme mağazada yapılacak"
+      }
+    </p>
+  `;
+}  
 loadProducts();
 renderCart();
 const savedOrderId = localStorage.getItem("lastOrderId");
 const savedOrderNumber = localStorage.getItem("lastOrderNumber");
 
 if(savedOrderId && savedOrderNumber){
-  showOrderTracking(savedOrderId, savedOrderNumber);
+
 }
 
 if("serviceWorker" in navigator){
