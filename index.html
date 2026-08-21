@@ -56,9 +56,7 @@
 
     main{padding:0 17px}
 
-    .hero{
-      padding:18px 0 10px
-    }
+    .hero{padding:18px 0 10px}
 
     .hero h1{
       font-size:31px;
@@ -88,9 +86,7 @@
       box-shadow:0 7px 20px #0000000b
     }
 
-    .brand b{
-      font-size:21px
-    }
+    .brand b{font-size:21px}
 
     .brand span{
       display:block;
@@ -302,7 +298,6 @@
   </main>
 </section>
 
-
 <section id="menu" class="screen">
   <main>
 
@@ -332,7 +327,6 @@
   </main>
 </section>
 
-
 <section id="cart" class="screen">
   <main>
 
@@ -347,25 +341,33 @@
       <b>Sipariş Türü</b>
 
       <div id="orderTypeArea">
-  <button
-    id="pickupBtn"
-    class="cta"
-    onclick="selectPickup()">
-    📦 Gel-Al Seç
-  </button>
 
-  <div id="tableOrderInfo" class="card" style="display:none;">
-    🪑 <b id="tableOrderText">Masa</b>
-  </div>
-</div>
-      <button class="cta" onclick="demoOrder()">
+        <button
+          id="pickupBtn"
+          class="cta"
+          onclick="selectPickup()">
+          📦 Gel-Al Seç
+        </button>
+
+        <div
+          id="tableOrderInfo"
+          class="card"
+          style="display:none;">
+          🪑 <b id="tableOrderText">Masa</b>
+        </div>
+
+      </div>
+
+      <button
+        class="cta"
+        onclick="demoOrder()">
         Siparişi Tamamla
       </button>
+
     </div>
 
   </main>
 </section>
-
 
 <section id="rewards" class="screen">
   <main>
@@ -407,16 +409,21 @@
       </div>
     </div>
 
-    <button class="cta" onclick="loadOrderStatus()"> 
+    <button
+      class="cta"
+      onclick="loadOrderStatus()">
       Durumu Yenile
     </button>
 
-    <button class="cta" onclick="go('home')">
+    <button
+      class="cta"
+      onclick="go('home')">
       Ana Sayfaya Dön
     </button>
 
   </main>
 </section>
+
 <section id="profile" class="screen">
   <main>
 
@@ -437,7 +444,6 @@
 
   </main>
 </section>
-
 
 <nav class="nav">
 
@@ -470,7 +476,6 @@
 
 </div>
 
-
 <script>
 
 const SUPABASE_URL =
@@ -479,7 +484,8 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_xGk_ZkAAC-3V7jcGCv78Lw_wG8zuekw";
 
-const db = window.supabase.createClient(
+const db =
+window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
@@ -489,113 +495,215 @@ let activeTable = null;
 let activeTableId = null;
 let cart = [];
 let orderMode = "pickup";
+let trackingInterval = null;
+
 
 function selectPickup(){
+
   if(activeTableId){
-    alert("Bu QR bir masaya ait. Siparişiniz masaya gönderilecek.");
+
+    alert(
+      "Bu QR bir masaya ait. Siparişiniz masaya gönderilecek."
+    );
+
     return;
   }
 
   orderMode = "pickup";
 
-  const btn = document.getElementById("pickupBtn");
+  const btn =
+    document.getElementById(
+      "pickupBtn"
+    );
 
   if(btn){
-    btn.textContent = "✓ 📦 Gel-Al Seçildi";
+
+    btn.textContent =
+      "✓ 📦 Gel-Al Seçildi";
+
   }
 }
+
+
 async function detectTable(){
 
-  const params = new URLSearchParams(window.location.search);
-  const token = params.get("table");
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
 
-  if(!token) return;
+  const token =
+    params.get("table");
 
-  const {data,error} = await db
-    .from("tables")
-    .select("id, table_number, qr_token, is_active")
-    .eq("qr_token", token)
-    .eq("is_active", true)
-    .maybeSingle();
+  const pickupBtn =
+    document.getElementById(
+      "pickupBtn"
+    );
+
+  const tableInfo =
+    document.getElementById(
+      "tableOrderInfo"
+    );
+
+  const tableText =
+    document.getElementById(
+      "tableOrderText"
+    );
+
+  if(!token){
+
+    orderMode = "pickup";
+
+    if(pickupBtn){
+
+      pickupBtn.style.display =
+        "block";
+
+      pickupBtn.textContent =
+        "📦 Gel-Al Seç";
+
+    }
+
+    if(tableInfo){
+
+      tableInfo.style.display =
+        "none";
+
+    }
+
+    return;
+  }
+
+  const {data,error} =
+    await db
+      .from("tables")
+      .select(
+        "id, table_number, qr_token, is_active"
+      )
+      .eq(
+        "qr_token",
+        token
+      )
+      .eq(
+        "is_active",
+        true
+      )
+      .maybeSingle();
 
   if(error){
-    console.error("Masa doğrulanamadı:", error);
+
+    console.error(
+      "Masa doğrulanamadı:",
+      error
+    );
+
     return;
   }
 
   if(!data){
-    alert("Geçersiz veya pasif masa QR kodu.");
+
+    alert(
+      "Geçersiz veya pasif masa QR kodu."
+    );
+
     return;
   }
 
-  activeTable = data.table_number;
-  activeTableId = data.id;
+  activeTable =
+    data.table_number;
 
-  const tag = document.querySelector(".tag");
+  activeTableId =
+    data.id;
+
+  orderMode =
+    "table";
+
+  const tag =
+    document.querySelector(
+      ".tag"
+    );
 
   if(tag){
-    tag.textContent = "🪑 Masa " + activeTable;
+
+    tag.textContent =
+      "🪑 Masa " +
+      activeTable;
+
   }
-}orderMode = "table";
-
-if(activeTableId && activeTable){
-
-  orderMode = "table";
-
-  const pickupBtn = document.getElementById("pickupBtn");
-  const tableInfo = document.getElementById("tableOrderInfo");
-  const tableText = document.getElementById("tableOrderText");
 
   if(pickupBtn){
-    pickupBtn.style.display = "none";
+
+    pickupBtn.style.display =
+      "none";
+
   }
 
   if(tableInfo){
-    tableInfo.style.display = "block";
+
+    tableInfo.style.display =
+      "block";
+
   }
 
   if(tableText){
-    tableText.textContent = "Masa " + activeTable + " seçildi";
-  }
 
-}else{
+    tableText.textContent =
+      "Masa " +
+      activeTable +
+      " seçildi";
 
-  orderMode = "pickup";
-
-  const pickupBtn = document.getElementById("pickupBtn");
-  const tableInfo = document.getElementById("tableOrderInfo");
-
-  if(pickupBtn){
-    pickupBtn.style.display = "block";
-    pickupBtn.textContent = "📦 Gel-Al Seç";
-  }
-
-  if(tableInfo){
-    tableInfo.style.display = "none";
   }
 }
+
+
 function go(id){
 
   document
-  .querySelectorAll(".screen")
-  .forEach(el => el.classList.remove("active"));
-  document
-  .querySelectorAll(".screen")
-  .forEach(el => el.classList.remove("active"));
+    .querySelectorAll(
+      ".screen"
+    )
+    .forEach(
+      el =>
+        el.classList.remove(
+          "active"
+        )
+    );
 
-  document
-  .getElementById(id)
-  .classList.add("active");
+  const target =
+    document.getElementById(
+      id
+    );
 
-  window.scrollTo(0,0);
+  if(target){
+
+    target.classList.add(
+      "active"
+    );
+
+  }
+
+  window.scrollTo(
+    0,
+    0
+  );
 }
 
 
 function brandEmoji(slug){
 
-  if(slug === "sando-lab") return "🥪";
+  if(
+    slug ===
+    "sando-lab"
+  ){
+    return "🥪";
+  }
 
-  if(slug === "toastiq") return "🍞";
+  if(
+    slug ===
+    "toastiq"
+  ){
+    return "🍞";
+  }
 
   return "🍓";
 }
@@ -603,52 +711,69 @@ function brandEmoji(slug){
 
 function priceText(price){
 
-  const value = Number(price);
+  const value =
+    Number(price);
 
-  if(!value || value <= 0)
+  if(
+    !value ||
+    value <= 0
+  ){
+
     return "Fiyat yakında";
 
-  return value.toLocaleString("tr-TR") + " TL";
+  }
+
+  return (
+    value.toLocaleString(
+      "tr-TR"
+    ) +
+    " TL"
+  );
 }
 
 
 function productCard(product){
 
-  const slug = product.brands?.slug || "";
+  const slug =
+    product.brands?.slug ||
+    "";
 
-  const image = product.image_url
-
-  ? `<img src="${product.image_url}" alt="${product.name}">`
-
-  : brandEmoji(slug);
+  const image =
+    product.image_url
+      ?
+      `<img src="${product.image_url}" alt="${product.name}">`
+      :
+      brandEmoji(slug);
 
   return `
 
-  <div class="product">
+    <div class="product">
 
-    <div class="photo">
-      ${image}
+      <div class="photo">
+        ${image}
+      </div>
+
+      <h3>
+        ${product.name}
+      </h3>
+
+      <div class="desc">
+        ${product.description || ""}
+      </div>
+
+      <div class="price">
+        ${priceText(product.price)}
+      </div>
+
+      <button
+        class="add"
+        onclick="addToCart('${product.id}')">
+
+        Sepete Ekle
+
+      </button>
+
     </div>
-
-    <h3>${product.name}</h3>
-
-    <div class="desc">
-      ${product.description || ""}
-    </div>
-
-    <div class="price">
-      ${priceText(product.price)}
-    </div>
-
-    <button
-      class="add"
-      onclick="addToCart('${product.id}')">
-
-      Sepete Ekle
-
-    </button>
-
-  </div>
 
   `;
 }
@@ -657,72 +782,103 @@ function productCard(product){
 async function loadProducts(){
 
   const featured =
-  document.getElementById("featuredProducts");
+    document.getElementById(
+      "featuredProducts"
+    );
 
   const {data,error} =
-  await db
-  .from("products")
-  .select(`
-    id,
-    name,
-    description,
-    price,
-    image_url,
-    is_best_seller,
-    is_featured,
-    sort_order,
-    brands (
-      name,
-      slug
-    ),
-    categories (
-      name
-    )
-  `)
-  .eq("is_available",true)
-  .order("sort_order");
-
+    await db
+      .from("products")
+      .select(`
+        id,
+        name,
+        description,
+        price,
+        image_url,
+        is_best_seller,
+        is_featured,
+        sort_order,
+        brands (
+          name,
+          slug
+        ),
+        categories (
+          name
+        )
+      `)
+      .eq(
+        "is_available",
+        true
+      )
+      .order(
+        "sort_order"
+      );
 
   if(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
-    featured.innerHTML =
-    `<div class="error">
-    Supabase bağlantısı kurulamadı.<br>
-    ${error.message}
-    </div>`;
+    featured.innerHTML = `
+
+      <div class="error">
+
+        Supabase bağlantısı kurulamadı.
+        <br>
+
+        ${error.message}
+
+      </div>
+
+    `;
 
     return;
   }
 
-
-  allProducts = data || [];
-
+  allProducts =
+    data || [];
 
   let best =
-  allProducts.filter(
-    p => p.is_best_seller || p.is_featured
-  );
+    allProducts.filter(
+      p =>
+        p.is_best_seller ||
+        p.is_featured
+    );
 
+  if(
+    best.length === 0
+  ){
 
-  if(best.length === 0)
-    best = allProducts.slice(0,4);
+    best =
+      allProducts.slice(
+        0,
+        4
+      );
 
+  }
 
-  if(best.length === 0){
+  if(
+    best.length === 0
+  ){
 
-    featured.innerHTML =
-    `<div class="card">
-    Henüz satışta ürün bulunmuyor.
-    </div>`;
+    featured.innerHTML = `
+
+      <div class="card">
+
+        Henüz satışta ürün bulunmuyor.
+
+      </div>
+
+    `;
 
     return;
   }
 
-
   featured.innerHTML =
-  best.map(productCard).join("");
+    best
+      .map(productCard)
+      .join("");
 }
 
 
@@ -739,163 +895,217 @@ function loadBrand(slug){
   go("menu");
 
   const products =
-  allProducts.filter(
-    p => p.brands?.slug === slug
-  );
-
+    allProducts.filter(
+      p =>
+        p.brands?.slug ===
+        slug
+    );
 
   const title =
+    slug ===
+    "sando-lab"
 
-  slug === "sando-lab"
-  ? "Sando Lab"
+      ? "Sando Lab"
 
-  : slug === "toastiq"
-  ? "Toastiq"
+      : slug ===
+        "toastiq"
 
-  : "CRAVÉ";
+      ? "Toastiq"
 
+      : "CRAVÉ";
 
-  document.getElementById("menuTitle")
-  .textContent = title;
-
+  document
+    .getElementById(
+      "menuTitle"
+    )
+    .textContent =
+      title;
 
   const area =
-  document.getElementById("menuProducts");
+    document.getElementById(
+      "menuProducts"
+    );
 
+  if(
+    products.length === 0
+  ){
 
-  if(products.length === 0){
+    area.innerHTML = `
 
-    area.innerHTML =
-    `<div class="card">
-    ${title} için henüz ürün eklenmedi.
-    </div>`;
+      <div class="card">
+
+        ${title} için henüz ürün eklenmedi.
+
+      </div>
+
+    `;
 
     return;
   }
 
-
   area.innerHTML =
-  products.map(productCard).join("");
+    products
+      .map(productCard)
+      .join("");
 }
 
 
 function addToCart(id){
 
   const product =
-  allProducts.find(p => p.id === id);
+    allProducts.find(
+      p =>
+        p.id === id
+    );
 
-  if(!product)
+  if(!product){
+
     return;
 
+  }
 
-  cart.push(product);
+  cart.push(
+    product
+  );
 
   renderCart();
 
-  alert(product.name + " sepete eklendi.");
+  alert(
+    product.name +
+    " sepete eklendi."
+  );
 }
 
 
 function renderCart(){
 
   const area =
-  document.getElementById("cartItems");
+    document.getElementById(
+      "cartItems"
+    );
 
+  if(
+    cart.length === 0
+  ){
 
-  if(cart.length === 0){
+    area.innerHTML = `
 
-    area.innerHTML =
-    `<div class="card">
-    Sepetiniz boş.
-    </div>`;
+      <div class="card">
+
+        Sepetiniz boş.
+
+      </div>
+
+    `;
 
     return;
   }
 
-
   area.innerHTML =
-  cart.map((product,index) => `
+    cart.map(
+      (product,index) => `
 
-    <div class="card">
+        <div class="card">
 
-      <div class="cart-row">
+          <div class="cart-row">
 
-        <div>
+            <div>
 
-          <b>${product.name}</b>
+              <b>
+                ${product.name}
+              </b>
 
-          <div class="small">
-            ${priceText(product.price)}
+              <div class="small">
+
+                ${priceText(product.price)}
+
+              </div>
+
+            </div>
+
+            <button
+              class="remove"
+              onclick="removeCart(${index})">
+
+              Sil
+
+            </button>
+
           </div>
 
         </div>
 
-        <button
-          class="remove"
-          onclick="removeCart(${index})">
-
-          Sil
-
-        </button>
-
-      </div>
-
-    </div>
-
-  `).join("");
+      `
+    ).join("");
 }
 
 
 function removeCart(index){
-async function showOrderTracking(orderId, orderNumber){
 
-  let trackingScreen = document.getElementById("tracking");
+  cart.splice(
+    index,
+    1
+  );
 
-  if(!trackingScreen){
-    trackingScreen = document.createElement("section");
-    trackingScreen.id = "tracking";
-    trackingScreen.className = "screen";
-
-    trackingScreen.innerHTML = `
-      <main>
-        <div class="hero">
-          <h1>Sipariş Takibi</h1>
-          <p id="trackingNumber"></p>
-        </div>
-
-        <div class="card">
-          <div id="trackingStatus">
-            Sipariş durumu yükleniyor...
-          </div>
-        </div>
-
-        <button class="cta" onclick="loadOrderStatus()">
-          Durumu Yenile
-        </button>
-      </main>
-    `;
-
-    document.querySelector(".app").insertBefore(
-      trackingScreen,
-      document.querySelector(".nav")
-    );
-  }
-
-  document.getElementById("trackingNumber").textContent =
-    "Sipariş No: " + orderNumber;
-
-  go("tracking");
-startTracking();
-
-  await loadOrderStatus(orderId);
+  renderCart();
 }
- async function loadOrderStatus(orderId = null){
+
+
+function showOrderTracking(
+  orderId,
+  orderNumber
+){
+
+  localStorage.setItem(
+    "lastOrderId",
+    orderId
+  );
+
+  localStorage.setItem(
+    "lastOrderNumber",
+    orderNumber
+  );
+
+  document
+    .getElementById(
+      "trackingNumber"
+    )
+    .textContent =
+      "Sipariş No: " +
+      orderNumber;
+
+  document
+    .getElementById(
+      "trackingStatus"
+    )
+    .innerHTML =
+      "🟡 <b>Sipariş alındı</b>";
+
+  go(
+    "tracking"
+  );
+
+  startTracking();
+}
+
+
+async function loadOrderStatus(){
 
   const id =
-    orderId || localStorage.getItem("lastOrderId");
+    localStorage.getItem(
+      "lastOrderId"
+    );
 
   const area =
-    document.getElementById("trackingStatus");
+    document.getElementById(
+      "trackingStatus"
+    );
+
+  if(!area){
+
+    return;
+
+  }
 
   if(!id){
 
@@ -905,35 +1115,35 @@ startTracking();
     return;
   }
 
-
-  area.innerHTML =
-    "Sipariş durumu kontrol ediliyor...";
-
-
-  const {data,error} = await db.rpc(
-    "get_order_status",
-    {
-      p_order_id: id
-    }
-  );
-
+  const {data,error} =
+    await db.rpc(
+      "get_order_status",
+      {
+        p_order_id:
+          id
+      }
+    );
 
   if(error){
 
-    console.error(error);
+    console.error(
+      "Sipariş takip hatası:",
+      error
+    );
 
     area.innerHTML =
-      "Sipariş durumu alınamadı.";
+      "❌ Sipariş durumu alınamadı.";
 
     return;
   }
 
-
   const order =
-    data && data.length > 0
-      ? data[0]
-      : null;
-
+    data &&
+    data.length > 0
+      ?
+      data[0]
+      :
+      null;
 
   if(!order){
 
@@ -942,7 +1152,6 @@ startTracking();
 
     return;
   }
-
 
   const statusNames = {
 
@@ -965,209 +1174,393 @@ startTracking();
       "✅ Teslim edildi",
 
     cancelled:
-      "❌ Sipariş iptal edildi"
+      "❌ Sipariş iptal edildi",
+
+    served:
+      "🍽️ Servis edildi",
+
+    closed:
+      "✅ Masa kapatıldı"
 
   };
-
 
   area.innerHTML = `
 
     <b>
-      ${statusNames[order.status] || order.status}
+
+      ${
+        statusNames[
+          order.status
+        ] ||
+        order.status
+      }
+
     </b>
 
     <p class="small">
+
       ${
-        order.payment_status === "paid"
-        ? "✅ Ödeme alındı"
-        : "💳 Ödeme mağazada yapılacak"
+        order.payment_status ===
+        "paid"
+
+          ?
+          "✅ Ödeme alındı"
+
+          :
+          "💳 Ödeme mağazada yapılacak"
       }
+
     </p>
 
   `;
 }
-function removeCart(index){
-  cart.splice(index,1);
-
-  renderCart();
-}
 
 
-async function demoOrder(){
-if(activeTableId){
+function startTracking(){
 
-    const total = cart.reduce(
-      (sum, product) => sum + Number(product.price || 0),
-      0
+  if(
+    trackingInterval
+  ){
+
+    clearInterval(
+      trackingInterval
     );
 
-    const orderNumber = "M-" + Date.now().toString().slice(-6);
-    const orderId = crypto.randomUUID();
-
-    const { error: orderError } = await db
-      .from("orders")
-      .insert({
-        id: orderId,
-        order_number: orderNumber,
-        table_id: activeTableId,
-        order_type: "table",
-        status: "new",
-        payment_status: "unpaid",
-        total: total
-      });
-
-    if(orderError){
-      alert("Masa siparişi oluşturulamadı: " + orderError.message);
-      return;
-    }
-
-    const items = cart.map(product => ({
-      order_id: orderId,
-      product_id: product.id,
-      product_name: product.name,
-      quantity: 1,
-      unit_price: Number(product.price || 0),
-      options: [],
-      note: null
-    }));
-
-    const { error: itemsError } = await db
-      .from("order_items")
-      .insert(items);
-
-    if(itemsError){
-      alert("Sipariş ürünleri kaydedilemedi: " + itemsError.message);
-      return;
-    }
-
-   cart = [];
-renderCart();
-
-localStorage.setItem("lastOrderId", orderId);
-localStorage.setItem("lastOrderNumber", orderNumber);
-
-showOrderTracking(orderId, orderNumber);
-
-    return;
-  }
-  if(cart.length === 0){
-    alert("Önce sepete ürün ekle.");
-    return;
-  }
-
-  const customerName = prompt("Gel-Al için adınızı yazın:");
-
-  if(!customerName){
-    alert("Ad gerekli.");
-    return;
-  }
-
-  const customerPhone = prompt("Telefon numaranızı yazın:");
-
-  if(!customerPhone){
-    alert("Telefon gerekli.");
-    return;
-  }
-
-  const total = cart.reduce(
-    (sum, product) => sum + Number(product.price || 0),
-    0
-  );
-
-  const orderNumber = "SL-" + Date.now().toString().slice(-6);
-
-  const orderId = crypto.randomUUID();
-
-const { error: orderError } = await db
-  .from("orders")
-  .insert({
-    id: orderId,
-    order_number: orderNumber,
-    order_type: "pickup",
-    status: "new",
-    payment_status: "unpaid",
-    total: total,
-    customer_note:
-      customerName + " | " + customerPhone
-  });
-
-  if(orderError){
-    console.error(orderError);
-    alert("Sipariş oluşturulamadı: " + orderError.message);
-    return;
-  }
-
-  const items = cart.map(product => ({
-    order_id: orderId,
-    product_id: product.id,
-    product_name: product.name,
-    quantity: 1,
-    unit_price: Number(product.price || 0),
-    options: [],
-    note: null
-  }));
-
-  const { error: itemsError } = await db
-    .from("order_items")
-    .insert(items);
-
-  if(itemsError){
-    console.error(itemsError);
-    alert("Sipariş ürünleri kaydedilemedi: " + itemsError.message);
-    return;
-  }
-
-  cart = [];
-renderCart();
-
-localStorage.setItem("lastOrderId", orderId);
-localStorage.setItem("lastOrderNumber", orderNumber);
-
-document.getElementById("trackingNumber").textContent =
-  "Sipariş No: " + orderNumber;
-
-document.getElementById("trackingStatus").innerHTML =
-  "🟡 <b>Sipariş alındı</b>";
-
-go("tracking");
-  startTracking();
-}
-detectTable();
-
-let trackingInterval = null;
-function startTracking(){
-  if(trackingInterval){
-    clearInterval(trackingInterval);
   }
 
   loadOrderStatus();
 
-  trackingInterval = setInterval(function(){
-    loadOrderStatus();
-  }, 5000);
+  trackingInterval =
+    setInterval(
+      loadOrderStatus,
+      5000
+    );
 }
 
-function stopTracking(){
 
-  if(trackingInterval){
-    clearInterval(trackingInterval);
-    trackingInterval = null;
+async function createOrderItems(
+  orderId
+){
+
+  const items =
+    cart.map(
+      product => ({
+
+        order_id:
+          orderId,
+
+        product_id:
+          product.id,
+
+        product_name:
+          product.name,
+
+        quantity:
+          1,
+
+        unit_price:
+          Number(
+            product.price ||
+            0
+          ),
+
+        options:
+          [],
+
+        note:
+          null
+
+      })
+    );
+
+  const {error} =
+    await db
+      .from(
+        "order_items"
+      )
+      .insert(
+        items
+      );
+
+  return error;
+}
+
+
+async function demoOrder(){
+
+  if(
+    cart.length === 0
+  ){
+
+    alert(
+      "Önce sepete ürün ekle."
+    );
+
+    return;
   }
-} 
-loadProducts();
-renderCart();
-const savedOrderId = localStorage.getItem("lastOrderId");
-const savedOrderNumber = localStorage.getItem("lastOrderNumber");
 
-if(savedOrderId && savedOrderNumber){
+  const total =
+    cart.reduce(
+      (
+        sum,
+        product
+      ) =>
+        sum +
+        Number(
+          product.price ||
+          0
+        ),
+      0
+    );
 
+  if(activeTableId){
+
+    const orderNumber =
+      "M-" +
+      Date.now()
+        .toString()
+        .slice(-6);
+
+    const orderId =
+      crypto.randomUUID();
+
+    const {
+      error:
+      orderError
+    } =
+      await db
+        .from(
+          "orders"
+        )
+        .insert({
+
+          id:
+            orderId,
+
+          order_number:
+            orderNumber,
+
+          table_id:
+            activeTableId,
+
+          order_type:
+            "table",
+
+          status:
+            "new",
+
+          payment_status:
+            "unpaid",
+
+          total:
+            total
+
+        });
+
+    if(orderError){
+
+      alert(
+        "Masa siparişi oluşturulamadı: " +
+        orderError.message
+      );
+
+      return;
+    }
+
+    const itemsError =
+      await createOrderItems(
+        orderId
+      );
+
+    if(itemsError){
+
+      alert(
+        "Sipariş ürünleri kaydedilemedi: " +
+        itemsError.message
+      );
+
+      return;
+    }
+
+    cart = [];
+
+    renderCart();
+
+    showOrderTracking(
+      orderId,
+      orderNumber
+    );
+
+    return;
+  }
+
+  const customerName =
+    prompt(
+      "Gel-Al için adınızı yazın:"
+    );
+
+  if(!customerName){
+
+    alert(
+      "Ad gerekli."
+    );
+
+    return;
+  }
+
+  const customerPhone =
+    prompt(
+      "Telefon numaranızı yazın:"
+    );
+
+  if(!customerPhone){
+
+    alert(
+      "Telefon gerekli."
+    );
+
+    return;
+  }
+
+  const orderNumber =
+    "SL-" +
+    Date.now()
+      .toString()
+      .slice(-6);
+
+  const orderId =
+    crypto.randomUUID();
+
+  const {
+    error:
+    orderError
+  } =
+    await db
+      .from(
+        "orders"
+      )
+      .insert({
+
+        id:
+          orderId,
+
+        order_number:
+          orderNumber,
+
+        order_type:
+          "pickup",
+
+        status:
+          "new",
+
+        payment_status:
+          "unpaid",
+
+        total:
+          total,
+
+        customer_note:
+          customerName +
+          " | " +
+          customerPhone
+
+      });
+
+  if(orderError){
+
+    console.error(
+      orderError
+    );
+
+    alert(
+      "Sipariş oluşturulamadı: " +
+      orderError.message
+    );
+
+    return;
+  }
+
+  const itemsError =
+    await createOrderItems(
+      orderId
+    );
+
+  if(itemsError){
+
+    console.error(
+      itemsError
+    );
+
+    alert(
+      "Sipariş ürünleri kaydedilemedi: " +
+      itemsError.message
+    );
+
+    return;
+  }
+
+  cart = [];
+
+  renderCart();
+
+  showOrderTracking(
+    orderId,
+    orderNumber
+  );
 }
 
-if("serviceWorker" in navigator){
+
+async function init(){
+
+  await detectTable();
+
+  await loadProducts();
+
+  renderCart();
+
+  const savedOrderId =
+    localStorage.getItem(
+      "lastOrderId"
+    );
+
+  const savedOrderNumber =
+    localStorage.getItem(
+      "lastOrderNumber"
+    );
+
+  if(
+    savedOrderId &&
+    savedOrderNumber
+  ){
+
+    document
+      .getElementById(
+        "trackingNumber"
+      )
+      .textContent =
+        "Sipariş No: " +
+        savedOrderNumber;
+
+  }
+}
+
+
+init();
+
+
+if(
+  "serviceWorker" in
+  navigator
+){
 
   window.addEventListener(
     "load",
-    () => navigator.serviceWorker.register("./sw.js")
+    () =>
+      navigator
+        .serviceWorker
+        .register(
+          "./sw.js"
+        )
   );
 
 }
