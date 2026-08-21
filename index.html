@@ -763,7 +763,89 @@ function renderCart(){
 
 
 function removeCart(index){
+async function showOrderTracking(orderId, orderNumber){
 
+  let trackingScreen = document.getElementById("tracking");
+
+  if(!trackingScreen){
+    trackingScreen = document.createElement("section");
+    trackingScreen.id = "tracking";
+    trackingScreen.className = "screen";
+
+    trackingScreen.innerHTML = `
+      <main>
+        <div class="hero">
+          <h1>Sipariş Takibi</h1>
+          <p id="trackingNumber"></p>
+        </div>
+
+        <div class="card">
+          <div id="trackingStatus">
+            Sipariş durumu yükleniyor...
+          </div>
+        </div>
+
+        <button class="cta" onclick="loadOrderStatus()">
+          Durumu Yenile
+        </button>
+      </main>
+    `;
+
+    document.querySelector(".app").insertBefore(
+      trackingScreen,
+      document.querySelector(".nav")
+    );
+  }
+
+  document.getElementById("trackingNumber").textContent =
+    "Sipariş No: " + orderNumber;
+
+  go("tracking");
+
+  await loadOrderStatus(orderId);
+}
+  async function loadOrderStatus(orderId = null){
+
+  const id =
+    orderId || localStorage.getItem("lastOrderId");
+
+  if(!id) return;
+
+  const {data,error} = await db
+    .from("orders")
+    .select("order_number,status,payment_status")
+    .eq("id", id)
+    .single();
+
+  const area = document.getElementById("trackingStatus");
+
+  if(error){
+    area.innerHTML =
+      "Sipariş durumu alınamadı.";
+    return;
+  }
+
+  const statusNames = {
+    new:"🟡 Sipariş alındı",
+    confirmed:"🟡 Onaylandı",
+    preparing:"🟠 Hazırlanıyor",
+    ready:"🟢 Hazır — Teslim alabilirsiniz",
+    customer_arrived:"🔵 Müşteri geldi",
+    completed:"✅ Teslim edildi",
+    cancelled:"❌ İptal edildi"
+  };
+
+  area.innerHTML = `
+    <b>${statusNames[data.status] || data.status}</b>
+
+    <p class="small">
+      Ödeme:
+      ${data.payment_status === "paid"
+        ? "Ödendi"
+        : "Mağazada ödenecek"}
+    </p>
+  `;
+}
   cart.splice(index,1);
 
   renderCart();
@@ -817,14 +899,13 @@ if(activeTableId){
       return;
     }
 
-    cart = [];
-    renderCart();
+   cart = [];
+renderCart();
 
-    alert(
-      "Masa " + activeTable +
-      " siparişiniz alındı! Sipariş numaranız: " +
-      orderNumber
-    );
+localStorage.setItem("lastOrderId", orderId);
+localStorage.setItem("lastOrderNumber", orderNumber);
+
+showOrderTracking(orderId, orderNumber);
 
     return;
   }
@@ -907,7 +988,12 @@ const { error: orderError } = await db
 detectTable();
 loadProducts();
 renderCart();
+const savedOrderId = localStorage.getItem("lastOrderId");
+const savedOrderNumber = localStorage.getItem("lastOrderNumber");
 
+if(savedOrderId && savedOrderNumber){
+  showOrderTracking(savedOrderId, savedOrderNumber);
+}
 
 if("serviceWorker" in navigator){
 
