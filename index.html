@@ -988,13 +988,17 @@ async function loadOrderStatus(orderId = null){
 
   if(!id) return;
 
-  const {data,error} = await db
-}
-    
-    .from("orders")
-    .select("order_number,status,payment_status")
-    .eq("id", id)
-    .single();
+  const { data, error } = await db.rpc(
+  "get_order_status",
+  {
+    p_order_id: id
+  }
+);
+
+const order =
+  data && data.length > 0
+    ? data[0]
+    : null;
 
   const area = document.getElementById("trackingStatus");
 
