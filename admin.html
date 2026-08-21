@@ -607,17 +607,9 @@
     }
 
     @media(max-width:1000px){
-      .orders{
-        grid-template-columns:1fr
-      }
-
-      .stats{
-        grid-template-columns:repeat(2,1fr)
-      }
-
-      .tables{
-        grid-template-columns:repeat(2,1fr)
-      }
+      .orders{grid-template-columns:1fr}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .tables{grid-template-columns:repeat(2,1fr)}
     }
 
     @media(max-width:760px){
@@ -630,9 +622,7 @@
         padding:10px
       }
 
-      .sidebar .brand{
-        display:none
-      }
+      .sidebar .brand{display:none}
 
       .navbtn{
         width:auto;
@@ -644,21 +634,13 @@
         padding:14px
       }
 
-      .topbar{
-        display:block
-      }
+      .topbar{display:block}
 
-      .top-actions{
-        margin-top:10px
-      }
+      .top-actions{margin-top:10px}
 
-      .grid2{
-        grid-template-columns:1fr
-      }
+      .grid2{grid-template-columns:1fr}
 
-      .report-grid{
-        grid-template-columns:1fr
-      }
+      .report-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -673,9 +655,7 @@
       SANDO LAB · TOASTIQ · CRAVÉ
     </div>
 
-    <h1>
-      İşletme Paneli
-    </h1>
+    <h1>İşletme Paneli</h1>
 
     <p class="muted">
       Sipariş, masa, ürün, stok ve rapor yönetimi.
@@ -683,39 +663,26 @@
 
     <div class="field">
       <label>E-posta</label>
-      <input
-        id="email"
-        type="email"
-        autocomplete="username">
+      <input id="email" type="email" autocomplete="username">
     </div>
 
     <div class="field">
       <label>Şifre</label>
-      <input
-        id="password"
-        type="password"
-        autocomplete="current-password">
+      <input id="password" type="password" autocomplete="current-password">
     </div>
 
-    <button
-      class="primary full"
-      onclick="login()">
+    <button class="primary full" onclick="login()">
       Giriş Yap
     </button>
 
-    <div
-      id="loginError"
-      class="login-error">
-    </div>
+    <div id="loginError" class="login-error"></div>
 
   </div>
 
 </section>
 
 
-<section
-  id="appView"
-  class="hidden">
+<section id="appView" class="hidden">
 
   <aside class="sidebar">
 
@@ -723,45 +690,27 @@
       SANDO LAB · TOASTIQ · CRAVÉ
     </div>
 
-    <button
-      class="navbtn active"
-      data-view="dashboard"
-      onclick="openView('dashboard',this)">
+    <button class="navbtn active" data-view="dashboard" onclick="openView('dashboard',this)">
       📊 Dashboard
     </button>
 
-    <button
-      class="navbtn"
-      data-view="orders"
-      onclick="openView('orders',this)">
+    <button class="navbtn" data-view="orders" onclick="openView('orders',this)">
       🧾 Siparişler
     </button>
 
-    <button
-      class="navbtn"
-      data-view="tables"
-      onclick="openView('tables',this)">
+    <button class="navbtn" data-view="tables" onclick="openView('tables',this)">
       🪑 Masalar
     </button>
 
-    <button
-      class="navbtn"
-      data-view="products"
-      onclick="openView('products',this)">
+    <button class="navbtn" data-view="products" onclick="openView('products',this)">
       🥪 Ürünler
     </button>
 
-    <button
-      class="navbtn"
-      data-view="stock"
-      onclick="openView('stock',this)">
+    <button class="navbtn" data-view="stock" onclick="openView('stock',this)">
       📦 Stok
     </button>
 
-    <button
-      class="navbtn"
-      data-view="reports"
-      onclick="openView('reports',this)">
+    <button class="navbtn" data-view="reports" onclick="openView('reports',this)">
       📈 Raporlar
     </button>
 
@@ -782,9 +731,7 @@
           Dashboard
         </h1>
 
-        <p
-          class="muted"
-          id="lastUpdate">
+        <p class="muted" id="lastUpdate">
           Canlı sistem
         </p>
 
@@ -792,15 +739,11 @@
 
       <div class="top-actions">
 
-        <button
-          class="secondary"
-          onclick="loadAll()">
+        <button class="secondary" onclick="loadAll()">
           ↻ Yenile
         </button>
 
-        <button
-          class="danger-btn"
-          onclick="logout()">
+        <button class="danger-btn" onclick="logout()">
           Çıkış
         </button>
 
@@ -809,9 +752,7 @@
     </div>
 
 
-    <section
-      id="view-dashboard"
-      class="view active">
+    <section id="view-dashboard" class="view active">
 
       <div class="stats">
 
@@ -842,22 +783,15 @@
 
         <div class="panel-head">
 
-          <h2>
-            Son Aktif Siparişler
-          </h2>
+          <h2>Son Aktif Siparişler</h2>
 
-          <button
-            class="secondary"
-            onclick="openView('orders')">
+          <button class="secondary" onclick="openView('orders')">
             Tümünü Gör
           </button>
 
         </div>
 
-        <div
-          id="dashboardOrders"
-          class="orders">
-        </div>
+        <div id="dashboardOrders" class="orders"></div>
 
       </div>
 
@@ -868,82 +802,39 @@
           <h2>Masa Durumu</h2>
         </div>
 
-        <div
-          id="dashboardTables"
-          class="tables">
-        </div>
+        <div id="dashboardTables" class="tables"></div>
 
       </div>
 
     </section>
 
 
-    <section
-      id="view-orders"
-      class="view">
+    <section id="view-orders" class="view">
 
       <div class="panel">
 
         <div class="toolbar">
 
-          <select
-            id="orderTypeFilter"
-            onchange="renderOrders()">
+          <select id="orderTypeFilter" onchange="renderOrders()">
 
-            <option value="all">
-              Tüm Siparişler
-            </option>
-
-            <option value="table">
-              Masada
-            </option>
-
-            <option value="pickup">
-              Gel-Al
-            </option>
+            <option value="all">Tüm Siparişler</option>
+            <option value="table">Masada</option>
+            <option value="pickup">Gel-Al</option>
 
           </select>
 
 
-          <select
-            id="orderStatusFilter"
-            onchange="renderOrders()">
+          <select id="orderStatusFilter" onchange="renderOrders()">
 
-            <option value="active">
-              Aktif
-            </option>
-
-            <option value="all">
-              Tüm Durumlar
-            </option>
-
-            <option value="new">
-              Yeni
-            </option>
-
-            <option value="confirmed">
-              Onaylandı
-            </option>
-
-            <option value="preparing">
-              Hazırlanıyor
-            </option>
-
-            <option value="ready">
-              Hazır
-            </option>
-
-            <option value="served">
-              Servis Edildi
-            </option>
-
-            <option value="completed">
-              Tamamlandı
-            </option>
-
-            <option value="cancelled">
-              İptal
-            </option>
+            <option value="active">Aktif</option>
+            <option value="all">Tüm Durumlar</option>
+            <option value="new">Yeni</option>
+            <option value="confirmed">Onaylandı</option>
+            <option value="preparing">Hazırlanıyor</option>
+            <option value="ready">Hazır</option>
+            <option value="served">Servis Edildi</option>
+            <option value="completed">Tamamlandı</option>
+            <option value="cancelled">İptal</option>
 
           </select>
 
@@ -957,19 +848,14 @@
         </div>
 
 
-        <div
-          id="ordersArea"
-          class="orders">
-        </div>
+        <div id="ordersArea" class="orders"></div>
 
       </div>
 
     </section>
 
 
-    <section
-      id="view-tables"
-      class="view">
+    <section id="view-tables" class="view">
 
       <div class="panel">
 
@@ -977,31 +863,22 @@
           <h2>Masalar</h2>
         </div>
 
-        <div
-          id="tablesArea"
-          class="tables">
-        </div>
+        <div id="tablesArea" class="tables"></div>
 
       </div>
 
     </section>
 
 
-    <section
-      id="view-products"
-      class="view">
+    <section id="view-products" class="view">
 
       <div class="panel">
 
         <div class="panel-head">
 
-          <h2>
-            Ürün Yönetimi
-          </h2>
+          <h2>Ürün Yönetimi</h2>
 
-          <button
-            class="primary"
-            onclick="openProductModal()">
+          <button class="primary" onclick="openProductModal()">
             + Yeni Ürün
           </button>
 
@@ -1016,31 +893,17 @@
             placeholder="Ürün ara"
             oninput="renderProducts()">
 
-          <select
-            id="productBrandFilter"
-            onchange="renderProducts()">
+          <select id="productBrandFilter" onchange="renderProducts()">
 
-            <option value="all">
-              Tüm Markalar
-            </option>
+            <option value="all">Tüm Markalar</option>
 
           </select>
 
-          <select
-            id="productAvailabilityFilter"
-            onchange="renderProducts()">
+          <select id="productAvailabilityFilter" onchange="renderProducts()">
 
-            <option value="all">
-              Tümü
-            </option>
-
-            <option value="available">
-              Satışta
-            </option>
-
-            <option value="hidden">
-              Gizli
-            </option>
+            <option value="all">Tümü</option>
+            <option value="available">Satışta</option>
+            <option value="hidden">Gizli</option>
 
           </select>
 
@@ -1066,8 +929,7 @@
 
             </thead>
 
-            <tbody id="productsBody">
-            </tbody>
+            <tbody id="productsBody"></tbody>
 
           </table>
 
@@ -1078,9 +940,7 @@
     </section>
 
 
-    <section
-      id="view-stock"
-      class="view">
+    <section id="view-stock" class="view">
 
       <div class="panel">
 
@@ -1097,21 +957,11 @@
             placeholder="Ürün ara"
             oninput="renderStock()">
 
-          <select
-            id="stockFilter"
-            onchange="renderStock()">
+          <select id="stockFilter" onchange="renderStock()">
 
-            <option value="all">
-              Tüm Stoklar
-            </option>
-
-            <option value="low">
-              Düşük Stok
-            </option>
-
-            <option value="out">
-              Tükendi
-            </option>
+            <option value="all">Tüm Stoklar</option>
+            <option value="low">Düşük Stok</option>
+            <option value="out">Tükendi</option>
 
           </select>
 
@@ -1134,8 +984,7 @@
 
             </thead>
 
-            <tbody id="stockBody">
-            </tbody>
+            <tbody id="stockBody"></tbody>
 
           </table>
 
@@ -1146,9 +995,7 @@
     </section>
 
 
-    <section
-      id="view-reports"
-      class="view">
+    <section id="view-reports" class="view">
 
       <div class="report-grid">
 
@@ -1170,9 +1017,7 @@
       </div>
 
 
-      <div
-        class="panel"
-        style="margin-top:16px">
+      <div class="panel" style="margin-top:16px">
 
         <div class="panel-head">
           <h2>En Çok Satan Ürünler</h2>
@@ -1193,8 +1038,7 @@
 
             </thead>
 
-            <tbody id="bestSellersBody">
-            </tbody>
+            <tbody id="bestSellersBody"></tbody>
 
           </table>
 
@@ -1209,9 +1053,7 @@
 </section>
 
 
-<div
-  id="productModal"
-  class="modal-backdrop hidden">
+<div id="productModal" class="modal-backdrop hidden">
 
   <div class="modal">
 
@@ -1221,26 +1063,20 @@
         Yeni Ürün
       </h2>
 
-      <button
-        class="ghost"
-        onclick="closeProductModal()">
+      <button class="ghost" onclick="closeProductModal()">
         ✕
       </button>
 
     </div>
 
-    <input
-      id="productId"
-      type="hidden">
+    <input id="productId" type="hidden">
 
 
     <div class="grid2">
 
       <div class="field">
 
-        <label>
-          Ürün Adı
-        </label>
+        <label>Ürün Adı</label>
 
         <input id="pName">
 
@@ -1249,9 +1085,7 @@
 
       <div class="field">
 
-        <label>
-          Fiyat
-        </label>
+        <label>Fiyat</label>
 
         <input
           id="pPrice"
@@ -1264,9 +1098,7 @@
 
       <div class="field">
 
-        <label>
-          Marka
-        </label>
+        <label>Marka</label>
 
         <select
           id="pBrand"
@@ -1278,21 +1110,16 @@
 
       <div class="field">
 
-        <label>
-          Kategori
-        </label>
+        <label>Kategori</label>
 
-        <select id="pCategory">
-        </select>
+        <select id="pCategory"></select>
 
       </div>
 
 
       <div class="field">
 
-        <label>
-          Sıralama
-        </label>
+        <label>Sıralama</label>
 
         <input
           id="pSort"
@@ -1304,9 +1131,7 @@
 
       <div class="field">
 
-        <label>
-          Stok
-        </label>
+        <label>Stok</label>
 
         <input
           id="pStock"
@@ -1319,9 +1144,7 @@
 
       <div class="field">
 
-        <label>
-          Minimum Stok
-        </label>
+        <label>Minimum Stok</label>
 
         <input
           id="pMinStock"
@@ -1336,21 +1159,16 @@
 
     <div class="field">
 
-      <label>
-        Açıklama
-      </label>
+      <label>Açıklama</label>
 
-      <textarea id="pDescription">
-      </textarea>
+      <textarea id="pDescription"></textarea>
 
     </div>
 
 
     <div class="field">
 
-      <label>
-        Görsel URL
-      </label>
+      <label>Görsel URL</label>
 
       <input
         id="pImageUrl"
@@ -1361,9 +1179,7 @@
 
     <div class="field">
 
-      <label>
-        Veya Görsel Yükle
-      </label>
+      <label>Veya Görsel Yükle</label>
 
       <input
         id="pImageFile"
@@ -1409,6 +1225,7 @@
     <div class="actions">
 
       <button
+        id="saveProductButton"
         class="primary"
         onclick="saveProduct()">
         Kaydet
@@ -1427,10 +1244,7 @@
 </div>
 
 
-<div
-  id="toast"
-  class="toast hidden">
-</div>
+<div id="toast" class="toast hidden"></div>
 
 
 <script>
@@ -1455,22 +1269,20 @@ let categories = [];
 let tables = [];
 let inventory = [];
 let refreshTimer = null;
+let isSavingProduct = false;
 
 
-const $ =
-id =>
+const $ = id =>
   document.getElementById(id);
 
 
-const money =
-value =>
+const money = value =>
   Number(value || 0)
     .toLocaleString("tr-TR") +
   " TL";
 
 
-const esc =
-value =>
+const esc = value =>
   String(value ?? "")
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
@@ -1488,16 +1300,13 @@ const closedStatuses = [
 
 function toast(message){
 
-  $("toast").textContent =
-    message;
+  $("toast").textContent = message;
 
   $("toast")
     .classList
     .remove("hidden");
 
-  clearTimeout(
-    toast.timer
-  );
+  clearTimeout(toast.timer);
 
   toast.timer =
     setTimeout(
@@ -1514,57 +1323,29 @@ function statusName(status){
 
   const map = {
 
-    new:
-      "Yeni",
-
-    confirmed:
-      "Onaylandı",
-
-    preparing:
-      "Hazırlanıyor",
-
-    ready:
-      "Hazır",
-
-    customer_arrived:
-      "Müşteri Geldi",
-
-    served:
-      "Servis Edildi",
-
-    completed:
-      "Tamamlandı",
-
-    closed:
-      "Kapandı",
-
-    cancelled:
-      "İptal"
+    new:"Yeni",
+    confirmed:"Onaylandı",
+    preparing:"Hazırlanıyor",
+    ready:"Hazır",
+    customer_arrived:"Müşteri Geldi",
+    served:"Servis Edildi",
+    completed:"Tamamlandı",
+    closed:"Kapandı",
+    cancelled:"İptal"
 
   };
 
-  return (
-    map[status] ||
-    status ||
-    "-"
-  );
+  return map[status] || status || "-";
 }
 
 
-function openView(
-  name,
-  button = null
-){
+function openView(name,button = null){
 
   document
-    .querySelectorAll(
-      ".view"
-    )
+    .querySelectorAll(".view")
     .forEach(
       view =>
-        view
-          .classList
-          .remove("active")
+        view.classList.remove("active")
     );
 
   $("view-" + name)
@@ -1573,14 +1354,10 @@ function openView(
 
 
   document
-    .querySelectorAll(
-      ".navbtn"
-    )
+    .querySelectorAll(".navbtn")
     .forEach(
       btn =>
-        btn
-          .classList
-          .remove("active")
+        btn.classList.remove("active")
     );
 
 
@@ -1596,29 +1373,17 @@ function openView(
     targetButton
       .classList
       .add("active");
-
   }
 
 
   $("viewTitle").textContent = {
 
-    dashboard:
-      "Dashboard",
-
-    orders:
-      "Siparişler",
-
-    tables:
-      "Masalar",
-
-    products:
-      "Ürünler",
-
-    stock:
-      "Stok",
-
-    reports:
-      "Raporlar"
+    dashboard:"Dashboard",
+    orders:"Siparişler",
+    tables:"Masalar",
+    products:"Ürünler",
+    stock:"Stok",
+    reports:"Raporlar"
 
   }[name] || name;
 }
@@ -1626,25 +1391,19 @@ function openView(
 
 async function login(){
 
-  $("loginError").textContent =
-    "";
-
+  $("loginError").textContent = "";
 
   const email =
     $("email")
       .value
       .trim();
 
-
   const password =
     $("password")
       .value;
 
 
-  if(
-    !email ||
-    !password
-  ){
+  if(!email || !password){
 
     $("loginError").textContent =
       "E-posta ve şifre gerekli.";
@@ -1656,10 +1415,8 @@ async function login(){
   const {error} =
     await db.auth
       .signInWithPassword({
-
         email,
         password
-
       });
 
 
@@ -1681,20 +1438,13 @@ async function logout(){
 
   await db.auth.signOut();
 
-
   if(refreshTimer){
-
-    clearInterval(
-      refreshTimer
-    );
-
+    clearInterval(refreshTimer);
   }
-
 
   $("appView")
     .classList
     .add("hidden");
-
 
   $("loginView")
     .classList
@@ -1708,27 +1458,21 @@ async function showApp(){
     .classList
     .add("hidden");
 
-
   $("appView")
     .classList
     .remove("hidden");
-
 
   await loadAll();
 
 
   if(refreshTimer){
-
-    clearInterval(
-      refreshTimer
-    );
-
+    clearInterval(refreshTimer);
   }
 
 
   refreshTimer =
     setInterval(
-      loadAll,
+      loadLiveData,
       5000
     );
 }
@@ -1736,42 +1480,62 @@ async function showApp(){
 
 async function loadAll(){
 
+  await loadMeta();
+
   await Promise.all([
 
     loadOrders(),
-
     loadProducts(),
-
-    loadMeta(),
-
     loadTables(),
-
     loadInventory()
 
   ]);
 
+  renderEverything();
+}
+
+
+async function loadLiveData(){
+
+  if(isSavingProduct){
+    return;
+  }
+
+  if(
+    !$("productModal")
+      .classList
+      .contains("hidden")
+  ){
+    return;
+  }
+
+  await Promise.all([
+
+    loadOrders(),
+    loadProducts(),
+    loadTables(),
+    loadInventory()
+
+  ]);
+
+  renderEverything();
+}
+
+
+function renderEverything(){
 
   updateStats();
-
   renderDashboard();
-
   renderOrders();
-
   renderTables();
-
   renderProducts();
-
   renderStock();
-
   renderReports();
-
 
   $("lastUpdate").textContent =
     "Son güncelleme: " +
     new Date()
-      .toLocaleTimeString(
-        "tr-TR"
-      );
+      .toLocaleTimeString("tr-TR");
 }
 
 
@@ -1808,6 +1572,7 @@ async function loadOrders(){
   if(error){
 
     console.error(
+      "Sipariş yükleme hatası:",
       error
     );
 
@@ -1815,8 +1580,7 @@ async function loadOrders(){
   }
 
 
-  orders =
-    data || [];
+  orders = data || [];
 }
 
 
@@ -1851,14 +1615,13 @@ async function loadProducts(){
         )
 
       `)
-      .order(
-        "sort_order"
-      );
+      .order("sort_order");
 
 
   if(error){
 
     console.error(
+      "Ürün yükleme hatası:",
       error
     );
 
@@ -1866,12 +1629,21 @@ async function loadProducts(){
   }
 
 
-  products =
-    data || [];
+  products = data || [];
 }
 
 
 async function loadMeta(){
+
+  const currentBrand =
+    $("pBrand")?.value || "";
+
+  const currentCategory =
+    $("pCategory")?.value || "";
+
+  const currentBrandFilter =
+    $("productBrandFilter")?.value || "all";
+
 
   const [
     brandResult,
@@ -1881,44 +1653,52 @@ async function loadMeta(){
 
       db
         .from("brands")
-        .select(
-          "id,name,slug"
-        )
+        .select("id,name,slug")
         .order("name"),
 
       db
         .from("categories")
-        .select(
-          "id,name,brand_id"
-        )
+        .select("id,name,brand_id")
         .order("name")
 
     ]);
 
 
-  if(
-    !brandResult.error
-  ){
+  if(brandResult.error){
+
+    console.error(
+      "Markalar yüklenemedi:",
+      brandResult.error
+    );
+
+  }
+  else{
 
     brands =
-      brandResult.data ||
-      [];
-
+      brandResult.data || [];
   }
 
 
-  if(
-    !categoryResult.error
-  ){
+  if(categoryResult.error){
+
+    console.error(
+      "Kategoriler yüklenemedi:",
+      categoryResult.error
+    );
+
+  }
+  else{
 
     categories =
-      categoryResult.data ||
-      [];
-
+      categoryResult.data || [];
   }
 
 
-  fillMetaSelects();
+  fillMetaSelects(
+    currentBrand,
+    currentCategory,
+    currentBrandFilter
+  );
 }
 
 
@@ -1934,17 +1714,21 @@ async function loadTables(){
         "is_active",
         true
       )
-      .order(
-        "table_number"
-      );
+      .order("table_number");
 
 
-  if(!error){
+  if(error){
 
-    tables =
-      data || [];
+    console.error(
+      "Masalar yüklenemedi:",
+      error
+    );
 
+    return;
   }
+
+
+  tables = data || [];
 }
 
 
@@ -1965,39 +1749,28 @@ async function loadInventory(){
       error.message
     );
 
-    inventory =
-      [];
+    inventory = [];
 
     return;
   }
 
 
-  inventory =
-    data || [];
+  inventory = data || [];
 }
 
 
-function inventoryFor(
-  productId
-){
+function inventoryFor(productId){
 
   return (
     inventory.find(
       item =>
-        item.product_id ===
-        productId
+        String(item.product_id) ===
+        String(productId)
     ) ||
     {
-
-      product_id:
-        productId,
-
-      stock_qty:
-        0,
-
-      min_stock:
-        5
-
+      product_id:productId,
+      stock_qty:0,
+      min_stock:5
     }
   );
 }
@@ -2038,8 +1811,7 @@ function updateStats(){
       active
         .filter(
           order =>
-            order.order_type ===
-              "table" &&
+            order.order_type === "table" &&
             order.table_id
         )
         .map(
@@ -2054,15 +1826,9 @@ function updateStats(){
     money(
 
       active.reduce(
-        (
-          total,
-          order
-        ) =>
+        (total,order) =>
           total +
-          Number(
-            order.total ||
-            0
-          ),
+          Number(order.total || 0),
         0
       )
 
@@ -2070,14 +1836,9 @@ function updateStats(){
 }
 
 
-function orderTypeLabel(
-  order
-){
+function orderTypeLabel(order){
 
-  if(
-    order.order_type ===
-    "table"
-  ){
+  if(order.order_type === "table"){
 
     return (
       "🪑 Masa " +
@@ -2087,56 +1848,35 @@ function orderTypeLabel(
         "?"
       )
     );
-
   }
-
 
   return "📦 Gel-Al";
 }
 
 
-function statusOptions(
-  current,
-  type
-){
+function statusOptions(current,type){
 
   const list =
     type === "table"
 
     ? [
-
         ["new","Yeni"],
-
         ["confirmed","Onaylandı"],
-
         ["preparing","Hazırlanıyor"],
-
         ["ready","Hazır"],
-
         ["served","Servis Edildi"],
-
         ["completed","Tamamlandı"],
-
         ["cancelled","İptal"]
-
       ]
 
     : [
-
         ["new","Yeni"],
-
         ["confirmed","Onaylandı"],
-
         ["preparing","Hazırlanıyor"],
-
         ["ready","Hazır"],
-
         ["customer_arrived","Müşteri Geldi"],
-
         ["completed","Teslim Edildi"],
-
         ["cancelled","İptal"]
-
       ];
 
 
@@ -2162,9 +1902,7 @@ function statusOptions(
 }
 
 
-function orderCard(
-  order
-){
+function orderCard(order){
 
   const items =
     (
@@ -2178,34 +1916,18 @@ function orderCard(
 
           <span>
 
-            ${esc(
-              item.quantity ||
-              1
-            )}
-
+            ${esc(item.quantity || 1)}
             ×
-
-            ${esc(
-              item.product_name ||
-              "Ürün"
-            )}
+            ${esc(item.product_name || "Ürün")}
 
           </span>
 
           <b>
 
             ${money(
-
-              Number(
-                item.unit_price ||
-                0
-              )
+              Number(item.unit_price || 0)
               *
-              Number(
-                item.quantity ||
-                1
-              )
-
+              Number(item.quantity || 1)
             )}
 
           </b>
@@ -2239,7 +1961,6 @@ function orderCard(
 
           </div>
 
-
           <div class="badges">
 
             <span
@@ -2250,25 +1971,13 @@ function orderCard(
                 : "pickup"
               }">
 
-              ${esc(
-                orderTypeLabel(
-                  order
-                )
-              )}
+              ${esc(orderTypeLabel(order))}
 
             </span>
-
 
             <span class="badge">
-
-              ${esc(
-                statusName(
-                  order.status
-                )
-              )}
-
+              ${esc(statusName(order.status))}
             </span>
-
 
             <span
               class="badge ${
@@ -2291,11 +2000,7 @@ function orderCard(
 
 
         <div class="total">
-
-          ${money(
-            order.total
-          )}
-
+          ${money(order.total)}
         </div>
 
       </div>
@@ -2304,30 +2009,22 @@ function orderCard(
       <div class="customer">
 
         <b>
-
           ${
             order.order_type ===
             "table"
-
             ? "Sipariş"
-
             : "Müşteri"
           }:
-
         </b>
 
         ${esc(
-
           order.order_type ===
           "table"
-
           ? "Masadan sipariş"
-
           : (
               order.customer_note ||
               "Misafir"
             )
-
         )}
 
       </div>
@@ -2338,15 +2035,9 @@ function orderCard(
         ${
           items ||
           `
-
             <div class="item">
-
-              <span>
-                Ürün bilgisi yok
-              </span>
-
+              <span>Ürün bilgisi yok</span>
             </div>
-
           `
         }
 
@@ -2357,9 +2048,7 @@ function orderCard(
 
         <div class="control">
 
-          <label>
-            Durum
-          </label>
+          <label>Durum</label>
 
           <select
             onchange="
@@ -2381,9 +2070,7 @@ function orderCard(
 
         <div class="control">
 
-          <label>
-            Ödeme
-          </label>
+          <label>Ödeme</label>
 
           <select
             onchange="
@@ -2395,16 +2082,9 @@ function orderCard(
 
             <option
               value=""
-              ${
-                !paid
-                ? "selected"
-                : ""
-              }>
-
+              ${!paid ? "selected" : ""}>
               Ödenmedi
-
             </option>
-
 
             <option
               value="cash"
@@ -2412,15 +2092,11 @@ function orderCard(
                 paid &&
                 order.payment_method ===
                 "cash"
-
                 ? "selected"
                 : ""
               }>
-
               💵 Nakit
-
             </option>
-
 
             <option
               value="card"
@@ -2428,13 +2104,10 @@ function orderCard(
                 paid &&
                 order.payment_method ===
                 "card"
-
                 ? "selected"
                 : ""
               }>
-
               💳 Kart
-
             </option>
 
           </select>
@@ -2453,13 +2126,8 @@ function renderDashboard(){
 
   $("dashboardOrders").innerHTML =
     activeOrders()
-      .slice(
-        0,
-        4
-      )
-      .map(
-        orderCard
-      )
+      .slice(0,4)
+      .map(orderCard)
       .join("")
     ||
     `
@@ -2477,9 +2145,7 @@ function renderDashboard(){
 
 function renderOrders(){
 
-  if(
-    !$("ordersArea")
-  ){
+  if(!$("ordersArea")){
     return;
   }
 
@@ -2505,25 +2171,17 @@ function renderOrders(){
       .trim();
 
 
-  if(
-    type !==
-    "all"
-  ){
+  if(type !== "all"){
 
     list =
       list.filter(
         order =>
-          order.order_type ===
-          type
+          order.order_type === type
       );
-
   }
 
 
-  if(
-    status ===
-    "active"
-  ){
+  if(status === "active"){
 
     list =
       list.filter(
@@ -2532,20 +2190,14 @@ function renderOrders(){
             order.status
           )
       );
-
   }
-  else if(
-    status !==
-    "all"
-  ){
+  else if(status !== "all"){
 
     list =
       list.filter(
         order =>
-          order.status ===
-          status
+          order.status === status
       );
-
   }
 
 
@@ -2572,15 +2224,12 @@ function renderOrders(){
           .includes(query)
 
       );
-
   }
 
 
   $("ordersArea").innerHTML =
     list
-      .map(
-        orderCard
-      )
+      .map(orderCard)
       .join("")
     ||
     `
@@ -2591,18 +2240,13 @@ function renderOrders(){
 }
 
 
-function renderTablesInto(
-  id
-){
+function renderTablesInto(id){
 
   const area =
     $(id);
 
-
   if(!area){
-
     return;
-
   }
 
 
@@ -2619,31 +2263,24 @@ function renderTablesInto(
             active.filter(
               order =>
                 order.order_type ===
-                  "table"
+                "table"
                 &&
-                order.table_id ===
-                  table.id
+                String(order.table_id) ===
+                String(table.id)
             );
 
 
           const total =
             tableOrders.reduce(
-              (
-                sum,
-                order
-              ) =>
+              (sum,order) =>
                 sum +
-                Number(
-                  order.total ||
-                  0
-                ),
+                Number(order.total || 0),
               0
             );
 
 
           const busy =
-            tableOrders.length >
-            0;
+            tableOrders.length > 0;
 
 
           return `
@@ -2660,9 +2297,7 @@ function renderTablesInto(
 
               <b>
                 🪑 Masa
-                ${esc(
-                  table.table_number
-                )}
+                ${esc(table.table_number)}
               </b>
 
               <small>
@@ -2705,39 +2340,30 @@ function renderTables(){
 }
 
 
-async function changeStatus(
-  id,
-  status
-){
+async function changeStatus(id,status){
 
   const order =
     orders.find(
       item =>
-        item.id === id
+        String(item.id) === String(id)
     );
 
 
   if(!order){
-
     return;
-
   }
 
 
   if(
-    order.order_type ===
-      "table"
+    order.order_type === "table"
     &&
     [
       "completed",
       "closed"
     ]
-    .includes(
-      status
-    )
+    .includes(status)
     &&
-    order.payment_status !==
-      "paid"
+    order.payment_status !== "paid"
   ){
 
     alert(
@@ -2756,10 +2382,7 @@ async function changeStatus(
       .update({
         status
       })
-      .eq(
-        "id",
-        id
-      );
+      .eq("id",id);
 
 
   if(error){
@@ -2778,49 +2401,31 @@ async function changeStatus(
   );
 
 
-  await loadAll();
+  await loadLiveData();
 }
 
 
-async function changePayment(
-  id,
-  method
-){
+async function changePayment(id,method){
 
   const payload =
     method
 
     ? {
-
-        payment_status:
-          "paid",
-
-        payment_method:
-          method
-
+        payment_status:"paid",
+        payment_method:method
       }
 
     : {
-
-        payment_status:
-          "unpaid",
-
-        payment_method:
-          null
-
+        payment_status:"unpaid",
+        payment_method:null
       };
 
 
   const {error} =
     await db
       .from("orders")
-      .update(
-        payload
-      )
-      .eq(
-        "id",
-        id
-      );
+      .update(payload)
+      .eq("id",id);
 
 
   if(error){
@@ -2839,30 +2444,53 @@ async function changePayment(
   );
 
 
-  await loadAll();
+  await loadLiveData();
 }
 
 
-function fillMetaSelects(){
+function fillMetaSelects(
+  selectedBrand = "",
+  selectedCategory = "",
+  selectedFilter = "all"
+){
 
-  const brandOptions =
+  const currentBrand =
+    selectedBrand ||
+    $("pBrand")?.value ||
+    "";
+
+  const currentCategory =
+    selectedCategory ||
+    $("pCategory")?.value ||
+    "";
+
+
+  $("pBrand").innerHTML =
     '<option value="">Marka seç</option>'
     +
     brands
       .map(
         brand => `
-
           <option value="${brand.id}">
             ${esc(brand.name)}
           </option>
-
         `
       )
       .join("");
 
 
-  $("pBrand").innerHTML =
-    brandOptions;
+  if(
+    currentBrand &&
+    brands.some(
+      brand =>
+        String(brand.id) ===
+        String(currentBrand)
+    )
+  ){
+
+    $("pBrand").value =
+      currentBrand;
+  }
 
 
   $("productBrandFilter").innerHTML =
@@ -2871,17 +2499,32 @@ function fillMetaSelects(){
     brands
       .map(
         brand => `
-
           <option value="${brand.id}">
             ${esc(brand.name)}
           </option>
-
         `
       )
       .join("");
 
 
-  fillCategorySelect();
+  if(
+    selectedFilter === "all" ||
+    brands.some(
+      brand =>
+        String(brand.id) ===
+        String(selectedFilter)
+    )
+  ){
+
+    $("productBrandFilter").value =
+      selectedFilter;
+  }
+
+
+  fillCategorySelect(
+    currentCategory ||
+    null
+  );
 }
 
 
@@ -2899,16 +2542,12 @@ function fillCategorySelect(
 
     ? categories.filter(
         category =>
-          String(
-            category.brand_id
-          )
+          String(category.brand_id)
           ===
-          String(
-            brandId
-          )
+          String(brandId)
       )
 
-    : categories;
+    : [];
 
 
   $("pCategory").innerHTML =
@@ -2917,67 +2556,47 @@ function fillCategorySelect(
     filtered
       .map(
         category => `
-
           <option value="${category.id}">
             ${esc(category.name)}
           </option>
-
         `
       )
       .join("");
 
 
-  if(selectedId){
+  if(
+    selectedId &&
+    filtered.some(
+      category =>
+        String(category.id) ===
+        String(selectedId)
+    )
+  ){
 
     $("pCategory").value =
       selectedId;
-
   }
 }
 
 
-function slugify(
-  text
-){
+function slugify(text){
 
   return String(
     text ||
     "urun"
   )
-  .toLocaleLowerCase(
-    "tr-TR"
-  )
-  .normalize(
-    "NFD"
-  )
+  .toLocaleLowerCase("tr-TR")
+  .normalize("NFD")
   .replace(
     /[\u0300-\u036f]/g,
     ""
   )
-  .replace(
-    /ı/g,
-    "i"
-  )
-  .replace(
-    /ğ/g,
-    "g"
-  )
-  .replace(
-    /ü/g,
-    "u"
-  )
-  .replace(
-    /ş/g,
-    "s"
-  )
-  .replace(
-    /ö/g,
-    "o"
-  )
-  .replace(
-    /ç/g,
-    "c"
-  )
+  .replace(/ı/g,"i")
+  .replace(/ğ/g,"g")
+  .replace(/ü/g,"u")
+  .replace(/ş/g,"s")
+  .replace(/ö/g,"o")
+  .replace(/ç/g,"c")
   .replace(
     /[^a-z0-9]+/g,
     "-"
@@ -2993,9 +2612,7 @@ function slugify(
 
 function renderProducts(){
 
-  if(
-    !$("productsBody")
-  ){
+  if(!$("productsBody")){
     return;
   }
 
@@ -3033,53 +2650,38 @@ function renderProducts(){
           .toLowerCase()
           .includes(query)
       );
-
   }
 
 
-  if(
-    brand !==
-    "all"
-  ){
+  if(brand !== "all"){
 
     list =
       list.filter(
         product =>
-          String(
-            product.brand_id
-          )
+          String(product.brand_id)
           ===
-          brand
+          String(brand)
       );
-
   }
 
 
-  if(
-    availability ===
-    "available"
-  ){
+  if(availability === "available"){
 
     list =
       list.filter(
         product =>
           product.is_available
       );
-
   }
 
 
-  if(
-    availability ===
-    "hidden"
-  ){
+  if(availability === "hidden"){
 
     list =
       list.filter(
         product =>
           !product.is_available
       );
-
   }
 
 
@@ -3089,9 +2691,7 @@ function renderProducts(){
         product => {
 
           const inventoryItem =
-            inventoryFor(
-              product.id
-            );
+            inventoryFor(product.id);
 
 
           const stock =
@@ -3130,19 +2730,14 @@ function renderProducts(){
                   product.image_url
 
                   ? `
-
                     <img
                       class="thumb"
                       src="${esc(product.image_url)}"
                       alt="">
-
                   `
 
                   : `
-
-                    <div class="thumb">
-                    </div>
-
+                    <div class="thumb"></div>
                   `
                 }
 
@@ -3164,10 +2759,7 @@ function renderProducts(){
                       product.description ||
                       ""
                     )
-                    .slice(
-                      0,
-                      70
-                    )
+                    .slice(0,70)
                   )}
 
                 </small>
@@ -3176,33 +2768,25 @@ function renderProducts(){
 
 
               <td>
-
                 ${esc(
                   product.brands
                     ?.name ||
                   "-"
                 )}
-
               </td>
 
 
               <td>
-
                 ${esc(
                   product.categories
                     ?.name ||
                   "-"
                 )}
-
               </td>
 
 
               <td>
-
-                ${money(
-                  product.price
-                )}
-
+                ${money(product.price)}
               </td>
 
 
@@ -3224,9 +2808,7 @@ function renderProducts(){
 
                 ${
                   product.is_available
-
                   ? "✅ Satışta"
-
                   : "⛔ Gizli"
                 }
 
@@ -3244,9 +2826,7 @@ function renderProducts(){
                         '${product.id}'
                       )
                     ">
-
                     Düzenle
-
                   </button>
 
 
@@ -3275,9 +2855,7 @@ function renderProducts(){
                         '${product.id}'
                       )
                     ">
-
                     Sil
-
                   </button>
 
                 </div>
@@ -3295,24 +2873,16 @@ function renderProducts(){
     `
 
       <tr>
-
-        <td
-          colspan="8"
-          class="empty">
-
+        <td colspan="8" class="empty">
           Ürün bulunamadı.
-
         </td>
-
       </tr>
 
     `;
 }
 
 
-function openProductModal(
-  id = null
-){
+function openProductModal(id = null){
 
   $("productModal")
     .classList
@@ -3330,16 +2900,15 @@ function openProductModal(
     id
     ? products.find(
         item =>
-          item.id === id
+          String(item.id) ===
+          String(id)
       )
     : null;
 
 
   const inventoryItem =
     product
-    ? inventoryFor(
-        product.id
-      )
+    ? inventoryFor(product.id)
     : {
         stock_qty:0,
         min_stock:5
@@ -3347,23 +2916,19 @@ function openProductModal(
 
 
   $("productId").value =
-    product?.id ||
-    "";
+    product?.id || "";
 
 
   $("pName").value =
-    product?.name ||
-    "";
+    product?.name || "";
 
 
   $("pPrice").value =
-    product?.price ||
-    "";
+    product?.price ?? "";
 
 
   $("pBrand").value =
-    product?.brand_id ||
-    "";
+    product?.brand_id || "";
 
 
   fillCategorySelect(
@@ -3373,12 +2938,12 @@ function openProductModal(
 
 
   $("pSort").value =
-    product?.sort_order ||
+    product?.sort_order ??
     0;
 
 
   $("pStock").value =
-    inventoryItem.stock_qty ||
+    inventoryItem.stock_qty ??
     0;
 
 
@@ -3388,13 +2953,11 @@ function openProductModal(
 
 
   $("pDescription").value =
-    product?.description ||
-    "";
+    product?.description || "";
 
 
   $("pImageUrl").value =
-    product?.image_url ||
-    "";
+    product?.image_url || "";
 
 
   $("pAvailable").checked =
@@ -3422,6 +2985,10 @@ function openProductModal(
 
 function closeProductModal(){
 
+  if(isSavingProduct){
+    return;
+  }
+
   $("productModal")
     .classList
     .add("hidden");
@@ -3445,14 +3012,12 @@ function updatePreview(){
     $("pPreview")
       .classList
       .remove("hidden");
-
   }
   else{
 
     $("pPreview")
       .classList
       .add("hidden");
-
   }
 }
 
@@ -3477,24 +3042,18 @@ $("pImageFile")
       if(file){
 
         $("pPreview").src =
-          URL.createObjectURL(
-            file
-          );
+          URL.createObjectURL(file);
 
 
         $("pPreview")
           .classList
           .remove("hidden");
-
       }
-
     }
   );
 
 
-async function uploadProductImage(
-  file
-){
+async function uploadProductImage(file){
 
   const extension =
     (
@@ -3524,15 +3083,14 @@ async function uploadProductImage(
         name,
         file,
         {
-          upsert:false
+          upsert:false,
+          contentType:file.type || undefined
         }
       );
 
 
   if(error){
-
     throw error;
-
   }
 
 
@@ -3541,9 +3099,7 @@ async function uploadProductImage(
       .from(
         "product-images"
       )
-      .getPublicUrl(
-        name
-      );
+      .getPublicUrl(name);
 
 
   return data.publicUrl;
@@ -3551,6 +3107,11 @@ async function uploadProductImage(
 
 
 async function saveProduct(){
+
+  if(isSavingProduct){
+    return;
+  }
+
 
   const id =
     $("productId")
@@ -3564,12 +3125,23 @@ async function saveProduct(){
       .trim();
 
 
+  const priceValue =
+    $("pPrice")
+      .value;
+
+
   const price =
-    Number(
-      $("pPrice")
-        .value ||
-      0
-    );
+    Number(priceValue);
+
+
+  const brandId =
+    $("pBrand")
+      .value;
+
+
+  const categoryId =
+    $("pCategory")
+      .value;
 
 
   if(!name){
@@ -3578,243 +3150,343 @@ async function saveProduct(){
       "Ürün adı gerekli."
     );
 
+    $("pName").focus();
+
     return;
   }
 
 
-  let imageUrl =
-    $("pImageUrl")
-      .value
-      .trim();
+  if(
+    priceValue === "" ||
+    Number.isNaN(price) ||
+    price < 0
+  ){
+
+    alert(
+      "Geçerli bir fiyat gir."
+    );
+
+    $("pPrice").focus();
+
+    return;
+  }
 
 
-  const file =
-    $("pImageFile")
-      .files[0];
+  if(!brandId){
+
+    alert(
+      "Lütfen marka seç."
+    );
+
+    $("pBrand").focus();
+
+    return;
+  }
 
 
-  if(file){
+  if(!categoryId){
 
-    try{
+    alert(
+      "Lütfen kategori seç."
+    );
+
+    $("pCategory").focus();
+
+    return;
+  }
+
+
+  const selectedBrandExists =
+    brands.some(
+      brand =>
+        String(brand.id) ===
+        String(brandId)
+    );
+
+
+  if(!selectedBrandExists){
+
+    alert(
+      "Seçilen marka geçersiz. Sayfayı yenileyip tekrar dene."
+    );
+
+    return;
+  }
+
+
+  const selectedCategoryExists =
+    categories.some(
+      category =>
+        String(category.id) ===
+        String(categoryId)
+        &&
+        String(category.brand_id) ===
+        String(brandId)
+    );
+
+
+  if(!selectedCategoryExists){
+
+    alert(
+      "Seçilen kategori bu markaya ait değil. Kategoriyi yeniden seç."
+    );
+
+    return;
+  }
+
+
+  isSavingProduct =
+    true;
+
+
+  const saveButton =
+    $("saveProductButton");
+
+
+  saveButton.disabled =
+    true;
+
+
+  saveButton.textContent =
+    "Kaydediliyor...";
+
+
+  try{
+
+    let imageUrl =
+      $("pImageUrl")
+        .value
+        .trim();
+
+
+    const file =
+      $("pImageFile")
+        .files[0];
+
+
+    if(file){
 
       imageUrl =
-        await uploadProductImage(
-          file
-        );
-
-    }
-    catch(error){
-
-      alert(
-        "Görsel yüklenemedi: " +
-        error.message
-      );
-
-      return;
+        await uploadProductImage(file);
     }
 
-  }
 
+    const payload = {
 
-  const payload = {
+      name,
 
-    name,
+      description:
+        $("pDescription")
+          .value
+          .trim(),
 
-    description:
-      $("pDescription")
-        .value
-        .trim(),
+      price,
 
-    price,
+      image_url:
+        imageUrl ||
+        null,
 
-    image_url:
-      imageUrl ||
-      null,
+      is_available:
+        $("pAvailable")
+          .checked,
 
-    is_available:
-      $("pAvailable")
-        .checked,
+      is_best_seller:
+        $("pBest")
+          .checked,
 
-    is_best_seller:
-      $("pBest")
-        .checked,
+      is_featured:
+        $("pFeatured")
+          .checked,
 
-    is_featured:
-      $("pFeatured")
-        .checked,
+      sort_order:
+        Number(
+          $("pSort")
+            .value ||
+          0
+        ),
 
-    sort_order:
-      Number(
-        $("pSort")
-          .value ||
-        0
-      ),
+      brand_id:
+        brandId,
 
-    brand_id:
-      $("pBrand")
-        .value ||
-      null,
-
-    category_id:
-      $("pCategory")
-        .value ||
-      null
-
-  };
-
-
-  let productId =
-    id;
-
-
-  if(id){
-
-    const {error} =
-      await db
-        .from("products")
-        .update(
-          payload
-        )
-        .eq(
-          "id",
-          id
-        );
-
-
-    if(error){
-
-      alert(
-        "Ürün güncellenemedi: " +
-        error.message
-      );
-
-      return;
-    }
-
-  }
-  else{
-
-    const insertPayload = {
-
-      ...payload,
-
-      slug:
-        slugify(name)
-        +
-        "-"
-        +
-        Date.now()
-          .toString(36)
+      category_id:
+        categoryId
 
     };
 
 
-    const {data,error} =
-      await db
-        .from("products")
-        .insert(
-          insertPayload
-        )
-        .select("id")
-        .single();
+    console.log(
+      "Ürün kayıt payload:",
+      payload
+    );
 
 
-    if(error){
+    let productId =
+      id;
 
-      alert(
-        "Ürün eklenemedi: " +
-        error.message
-      );
 
-      return;
+    if(id){
+
+      const {error} =
+        await db
+          .from("products")
+          .update(payload)
+          .eq("id",id);
+
+
+      if(error){
+        throw new Error(
+          "Ürün güncellenemedi: " +
+          error.message
+        );
+      }
+    }
+    else{
+
+      const insertPayload = {
+
+        ...payload,
+
+        slug:
+          slugify(name)
+          +
+          "-"
+          +
+          Date.now()
+            .toString(36)
+
+      };
+
+
+      const {data,error} =
+        await db
+          .from("products")
+          .insert(insertPayload)
+          .select("id")
+          .single();
+
+
+      if(error){
+        throw new Error(
+          "Ürün eklenemedi: " +
+          error.message
+        );
+      }
+
+
+      productId =
+        data.id;
     }
 
 
-    productId =
-      data.id;
+    const inventoryPayload = {
 
-  }
+      product_id:
+        productId,
+
+      stock_qty:
+        Math.max(
+          0,
+          Number(
+            $("pStock")
+              .value ||
+            0
+          )
+        ),
+
+      min_stock:
+        Math.max(
+          0,
+          Number(
+            $("pMinStock")
+              .value ||
+            0
+          )
+        ),
+
+      updated_at:
+        new Date()
+          .toISOString()
+
+    };
 
 
-  const inventoryPayload = {
-
-    product_id:
-      productId,
-
-    stock_qty:
-      Number(
-        $("pStock")
-          .value ||
-        0
-      ),
-
-    min_stock:
-      Number(
-        $("pMinStock")
-          .value ||
-        0
-      ),
-
-    updated_at:
-      new Date()
-        .toISOString()
-
-  };
+    const {
+      error:inventoryError
+    } =
+      await db
+        .from("inventory")
+        .upsert(
+          inventoryPayload,
+          {
+            onConflict:
+              "product_id"
+          }
+        );
 
 
-  const {
-    error:
-    inventoryError
-  } =
-    await db
-      .from("inventory")
-      .upsert(
-        inventoryPayload,
-        {
-          onConflict:
-            "product_id"
-        }
+    if(inventoryError){
+
+      console.warn(
+        "Ürün kaydedildi ancak stok kaydı yapılamadı:",
+        inventoryError.message
       );
 
+      toast(
+        "Ürün kaydedildi, stok kaydında hata var."
+      );
+    }
+    else{
 
-  if(inventoryError){
+      toast(
+        id
+        ? "Ürün güncellendi."
+        : "Ürün başarıyla eklendi."
+      );
+    }
 
-    console.warn(
-      "Stok kaydı yapılamadı:",
-      inventoryError.message
-    );
+
+    $("productModal")
+      .classList
+      .add("hidden");
+
+
+    await loadAll();
 
   }
+  catch(error){
 
+    console.error(
+      error
+    );
 
-  closeProductModal();
+    alert(
+      error.message ||
+      "Ürün kaydedilemedi."
+    );
+  }
+  finally{
 
+    isSavingProduct =
+      false;
 
-  toast(
-    "Ürün kaydedildi."
-  );
+    saveButton.disabled =
+      false;
 
-
-  await loadAll();
+    saveButton.textContent =
+      "Kaydet";
+  }
 }
 
 
-async function toggleProduct(
-  id,
-  value
-){
+async function toggleProduct(id,value){
 
   const {error} =
     await db
       .from("products")
       .update({
-        is_available:
-          value
+        is_available:value
       })
-      .eq(
-        "id",
-        id
-      );
+      .eq("id",id);
 
 
   if(error){
@@ -3828,20 +3500,24 @@ async function toggleProduct(
   }
 
 
-  await loadAll();
+  toast(
+    value
+    ? "Ürün satışa açıldı."
+    : "Ürün gizlendi."
+  );
+
+
+  await loadLiveData();
 }
 
 
-async function deleteProduct(
-  id
-){
+async function deleteProduct(id){
 
   if(
     !confirm(
       "Bu ürünü kaldırmak istediğine emin misin?"
     )
   ){
-
     return;
   }
 
@@ -3850,27 +3526,20 @@ async function deleteProduct(
     await db
       .from("products")
       .delete()
-      .eq(
-        "id",
-        id
-      );
+      .eq("id",id);
 
 
   if(error){
 
     const {
-      error:
-      hideError
+      error:hideError
     } =
       await db
         .from("products")
         .update({
           is_available:false
         })
-        .eq(
-          "id",
-          id
-        );
+        .eq("id",id);
 
 
     if(hideError){
@@ -3885,29 +3554,24 @@ async function deleteProduct(
 
 
     toast(
-      "Ürün sipariş geçmişi nedeniyle silinemedi; satıştan gizlendi."
+      "Ürün geçmiş siparişler nedeniyle silinemedi; satıştan gizlendi."
     );
-
   }
   else{
 
     toast(
       "Ürün silindi."
     );
-
   }
 
 
-  await loadAll();
+  await loadLiveData();
 }
 
 
 function renderStock(){
 
-  if(
-    !$("stockBody")
-  ){
-
+  if(!$("stockBody")){
     return;
   }
 
@@ -3940,66 +3604,43 @@ function renderStock(){
           .toLowerCase()
           .includes(query)
       );
-
   }
 
 
-  if(
-    filter ===
-    "low"
-  ){
+  if(filter === "low"){
 
     list =
       list.filter(
         product => {
 
           const item =
-            inventoryFor(
-              product.id
-            );
+            inventoryFor(product.id);
 
 
           return (
-            Number(
-              item.stock_qty
-            )
-            >
-            0
+            Number(item.stock_qty) > 0
             &&
-            Number(
-              item.stock_qty
-            )
+            Number(item.stock_qty)
             <=
-            Number(
-              item.min_stock ||
-              0
-            )
+            Number(item.min_stock || 0)
           );
-
         }
       );
-
   }
 
 
-  if(
-    filter ===
-    "out"
-  ){
+  if(filter === "out"){
 
     list =
       list.filter(
         product =>
           Number(
-            inventoryFor(
-              product.id
-            )
-            .stock_qty
+            inventoryFor(product.id)
+              .stock_qty
           )
           <=
           0
       );
-
   }
 
 
@@ -4009,9 +3650,7 @@ function renderStock(){
         product => {
 
           const item =
-            inventoryFor(
-              product.id
-            );
+            inventoryFor(product.id);
 
 
           const stock =
@@ -4057,23 +3696,18 @@ function renderStock(){
             <tr>
 
               <td>
-
                 <b>
                   ${esc(product.name)}
                 </b>
-
               </td>
-
 
               <td>
                 ${stock}
               </td>
 
-
               <td>
                 ${minimum}
               </td>
-
 
               <td>
 
@@ -4088,7 +3722,6 @@ function renderStock(){
 
               </td>
 
-
               <td>
 
                 <div class="actions">
@@ -4101,11 +3734,8 @@ function renderStock(){
                         -1
                       )
                     ">
-
                     −1
-
                   </button>
-
 
                   <button
                     class="mini"
@@ -4115,11 +3745,8 @@ function renderStock(){
                         1
                       )
                     ">
-
                     +1
-
                   </button>
-
 
                   <button
                     class="mini"
@@ -4128,9 +3755,7 @@ function renderStock(){
                         '${product.id}'
                       )
                     ">
-
                     Belirle
-
                   </button>
 
                 </div>
@@ -4148,39 +3773,25 @@ function renderStock(){
     `
 
       <tr>
-
-        <td
-          colspan="5"
-          class="empty">
-
+        <td colspan="5" class="empty">
           Stok kaydı yok.
-
         </td>
-
       </tr>
 
     `;
 }
 
 
-async function adjustStock(
-  productId,
-  delta
-){
+async function adjustStock(productId,delta){
 
   const item =
-    inventoryFor(
-      productId
-    );
+    inventoryFor(productId);
 
 
   const next =
     Math.max(
       0,
-      Number(
-        item.stock_qty ||
-        0
-      )
+      Number(item.stock_qty || 0)
       +
       delta
     );
@@ -4192,11 +3803,9 @@ async function adjustStock(
       .upsert(
         {
 
-          product_id:
-            productId,
+          product_id:productId,
 
-          stock_qty:
-            next,
+          stock_qty:next,
 
           min_stock:
             Number(
@@ -4227,18 +3836,19 @@ async function adjustStock(
   }
 
 
-  await loadAll();
+  toast(
+    "Stok güncellendi."
+  );
+
+
+  await loadLiveData();
 }
 
 
-async function setStock(
-  productId
-){
+async function setStock(productId){
 
   const item =
-    inventoryFor(
-      productId
-    );
+    inventoryFor(productId);
 
 
   const quantity =
@@ -4260,6 +3870,27 @@ async function setStock(
     ||
     minimum === null
   ){
+    return;
+  }
+
+
+  const parsedQuantity =
+    Number(quantity);
+
+
+  const parsedMinimum =
+    Number(minimum);
+
+
+  if(
+    Number.isNaN(parsedQuantity)
+    ||
+    Number.isNaN(parsedMinimum)
+  ){
+
+    alert(
+      "Stok değerleri sayı olmalı."
+    );
 
     return;
   }
@@ -4271,25 +3902,18 @@ async function setStock(
       .upsert(
         {
 
-          product_id:
-            productId,
+          product_id:productId,
 
           stock_qty:
             Math.max(
               0,
-              Number(
-                quantity ||
-                0
-              )
+              parsedQuantity
             ),
 
           min_stock:
             Math.max(
               0,
-              Number(
-                minimum ||
-                0
-              )
+              parsedMinimum
             ),
 
           updated_at:
@@ -4315,7 +3939,12 @@ async function setStock(
   }
 
 
-  await loadAll();
+  toast(
+    "Stok güncellendi."
+  );
+
+
+  await loadLiveData();
 }
 
 
@@ -4351,25 +3980,24 @@ function renderReports(){
     );
 
 
+  const paidOrders =
+    todaysOrders.filter(
+      order =>
+        order.payment_status ===
+        "paid"
+    );
+
+
   const revenue =
-    todaysOrders
-      .filter(
-        order =>
-          order.payment_status ===
-          "paid"
-      )
-      .reduce(
-        (
-          total,
-          order
-        ) =>
-          total +
-          Number(
-            order.total ||
-            0
-          ),
-        0
-      );
+    paidOrders.reduce(
+      (total,order) =>
+        total +
+        Number(
+          order.total ||
+          0
+        ),
+      0
+    );
 
 
   $("reportTodayRevenue").textContent =
@@ -4383,10 +4011,10 @@ function renderReports(){
   $("reportAvg").textContent =
     money(
 
-      todaysOrders.length
+      paidOrders.length
 
       ? revenue /
-        todaysOrders.length
+        paidOrders.length
 
       : 0
 
@@ -4412,20 +4040,12 @@ function renderReports(){
               "Ürün";
 
 
-            if(
-              !productMap[key]
-            ){
+            if(!productMap[key]){
 
               productMap[key] = {
-
-                quantity:
-                  0,
-
-                revenue:
-                  0
-
+                quantity:0,
+                revenue:0
               };
-
             }
 
 
@@ -4450,40 +4070,23 @@ function renderReports(){
                 item.unit_price ||
                 0
               );
-
           }
         )
-
     );
 
 
   $("bestSellersBody").innerHTML =
     Object
-      .entries(
-        productMap
-      )
+      .entries(productMap)
       .sort(
-        (
-          first,
-          second
-        ) =>
-          second[1]
-            .quantity
+        (first,second) =>
+          second[1].quantity
           -
-          first[1]
-            .quantity
+          first[1].quantity
       )
-      .slice(
-        0,
-        10
-      )
+      .slice(0,10)
       .map(
-        (
-          [
-            name,
-            values
-          ]
-        ) => `
+        ([name,values]) => `
 
           <tr>
 
@@ -4508,15 +4111,9 @@ function renderReports(){
     `
 
       <tr>
-
-        <td
-          colspan="3"
-          class="empty">
-
+        <td colspan="3" class="empty">
           Bugün satış yok.
-
         </td>
-
       </tr>
 
     `;
@@ -4537,52 +4134,45 @@ async function boot(){
   if(session){
 
     await showApp();
-
   }
   else{
 
     $("loginView")
       .classList
       .remove("hidden");
-
   }
 }
 
 
 db.auth.onAuthStateChange(
-  async(
-    event,
-    session
-  ) => {
+  async(event,session) => {
 
-    if(
-      event ===
-      "SIGNED_OUT"
-    ){
+    if(event === "SIGNED_OUT"){
 
       $("appView")
         .classList
         .add("hidden");
 
-
       $("loginView")
         .classList
         .remove("hidden");
-
     }
 
 
     if(
-      event ===
-      "SIGNED_IN"
+      event === "SIGNED_IN"
       &&
       session
     ){
 
-      await showApp();
-
+      if(
+        $("appView")
+          .classList
+          .contains("hidden")
+      ){
+        await showApp();
+      }
     }
-
   }
 );
 
