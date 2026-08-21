@@ -393,7 +393,30 @@
   </main>
 </section>
 
+<section id="tracking" class="screen">
+  <main>
 
+    <div class="hero">
+      <h1>Sipariş Takibi</h1>
+      <p id="trackingNumber">Sipariş numarası</p>
+    </div>
+
+    <div class="card">
+      <div id="trackingStatus">
+        🟡 Sipariş alındı
+      </div>
+    </div>
+
+    <button class="cta" onclick="loadOrderStatus()">
+      Durumu Yenile
+    </button>
+
+    <button class="cta" onclick="go('home')">
+      Ana Sayfaya Dön
+    </button>
+
+  </main>
+</section>
 <section id="profile" class="screen">
   <main>
 
@@ -1035,11 +1058,18 @@ const { error: orderError } = await db
   }
 
   cart = [];
-  renderCart();
+renderCart();
 
-  alert(
-    "Siparişiniz alındı! Sipariş numaranız: " + orderNumber
-  );
+localStorage.setItem("lastOrderId", orderId);
+localStorage.setItem("lastOrderNumber", orderNumber);
+
+document.getElementById("trackingNumber").textContent =
+  "Sipariş No: " + orderNumber;
+
+document.getElementById("trackingStatus").innerHTML =
+  "🟡 <b>Sipariş alındı</b>";
+
+go("tracking");
 }
 
 
