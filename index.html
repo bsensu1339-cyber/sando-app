@@ -456,9 +456,43 @@ const db = window.supabase.createClient(
 );
 
 let allProducts = [];
+let activeTable = null;
+let activeTableId = null;
 let cart = [];
 
+async function detectTable(){
 
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("table");
+
+  if(!token) return;
+
+  const {data,error} = await db
+    .from("tables")
+    .select("id, table_number, qr_token, is_active")
+    .eq("qr_token", token)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if(error){
+    console.error("Masa doğrulanamadı:", error);
+    return;
+  }
+
+  if(!data){
+    alert("Geçersiz veya pasif masa QR kodu.");
+    return;
+  }
+
+  activeTable = data.table_number;
+  activeTableId = data.id;
+
+  const tag = document.querySelector(".tag");
+
+  if(tag){
+    tag.textContent = "🪑 Masa " + activeTable;
+  }
+}
 function go(id){
 
   document
