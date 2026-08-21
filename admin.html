@@ -338,24 +338,30 @@ function orderCard(order){
 
 
       <select
-        onchange="changePayment(
-          '${order.id}',
-          this.value
-        )">
+  onchange="changePayment(
+    '${order.id}',
+    this.value
+  )">
 
-        <option
-          value="unpaid"
-          ${order.payment_status === "unpaid" ? "selected" : ""}>
-          Ödenmedi
-        </option>
+  <option
+    value=""
+    ${order.payment_status === "unpaid" ? "selected" : ""}>
+    Ödenmedi
+  </option>
 
-        <option
-          value="paid"
-          ${order.payment_status === "paid" ? "selected" : ""}>
-          Ödendi
-        </option>
+  <option
+    value="cash"
+    ${order.payment_status === "paid" && order.payment_method === "cash" ? "selected" : ""}>
+    💵 Nakit
+  </option>
 
-      </select>
+  <option
+    value="card"
+    ${order.payment_status === "paid" && order.payment_method === "card" ? "selected" : ""}>
+    💳 Kart
+  </option>
+
+</select>
 
     </div>
 
@@ -422,12 +428,23 @@ async function changeStatus(id,status){
 }
 
 
-async function changePayment(id,payment_status){
+async function changePayment(id,method){
+
+  let payment_status = "unpaid";
+  let payment_method = null;
+
+  if(method === "cash" || method === "card"){
+    payment_status = "paid";
+    payment_method = method;
+  }
 
   const {error} =
     await db
       .from("orders")
-      .update({payment_status})
+      .update({
+        payment_status,
+        payment_method
+      })
       .eq("id",id);
 
   if(error){
