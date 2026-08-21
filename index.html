@@ -982,13 +982,15 @@ async function showOrderTracking(orderId, orderNumber){
 
   `;
 }
-
+async function loadOrderStatus(orderId = null){
   const id =
     orderId || localStorage.getItem("lastOrderId");
 
   if(!id) return;
 
   const {data,error} = await db
+}
+    
     .from("orders")
     .select("order_number,status,payment_status")
     .eq("id", id)
