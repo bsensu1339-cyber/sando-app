@@ -1,9 +1,460 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>İşletme Paneli</title>
-<style>body{font-family:Arial;margin:0;background:#f3f3f1;color:#181818}main{max-width:900px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:white;border-radius:16px;padding:18px;margin:12px 0;border:1px solid #ddd}.stat{font-size:26px;font-weight:bold}.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}.order{border-left:5px solid #222}.btns button{padding:9px;border:0;border-radius:9px;margin:3px;background:#181818;color:#fff}@media(max-width:650px){.cols,.stats{grid-template-columns:1fr}}</style></head>
-<body><main><div class="top"><div><h1>İşletme Paneli</h1><p>Sando Lab · Toastiq · CRAVÉ</p></div><b>PIN 🔒</b></div>
-<div class="stats"><div class="card"><span>Sipariş</span><div class="stat">0</div></div><div class="card"><span>Ciro</span><div class="stat">0 TL</div></div><div class="card"><span>Aktif Masa</span><div class="stat">0/4</div></div></div>
-<div class="cols"><section><h2>🪑 Masalar</h2><div class="card">Masa 1 — Boş</div><div class="card">Masa 2 — Boş</div><div class="card">Masa 3 — Boş</div><div class="card">Masa 4 — Boş</div></section>
-<section><h2>📦 Gel-Al</h2><div class="card order"><b>Örnek: SL-1042</b><p>Sando Burger × 1</p><div class="btns"><button>Onayla</button><button>Hazırlanıyor</button><button>Hazır</button><button>Ödeme Alındı</button></div></div></section></div>
-<div class="card"><h2>📋 Mutfak Özeti</h2><p>Aktif siparişlerdeki aynı ürünler burada otomatik gruplanacak.</p></div>
-<div class="card"><h2>Yönetim</h2><p>Menü · Satışta/Tükendi/Gizli · Kampanyalar · Müşteriler · Puan/Damga · Nakit/Kart · Gün/Hafta/Ay raporları</p></div>
-</main></body></html>
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>İşletme Paneli</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#f3f3f1;
+  color:#181818
+}
+.wrap{max-width:1000px;margin:auto;padding:20px}
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px
+}
+h1{margin:0;font-size:27px}
+.muted{color:#777;font-size:13px}
+.card{
+  background:#fff;border:1px solid #ddd;border-radius:18px;
+  padding:18px;margin-bottom:13px
+}
+.login{max-width:420px;margin:80px auto}
+input,select{
+  width:100%;padding:13px;border:1px solid #ddd;
+  border-radius:11px;margin:6px 0 12px;font-size:15px
+}
+button{
+  border:0;border-radius:11px;padding:11px 14px;
+  background:#181818;color:#fff;cursor:pointer;font-weight:700
+}
+.secondary{background:#eee;color:#181818}
+.top{
+  display:flex;justify-content:space-between;
+  gap:10px;align-items:flex-start
+}
+.badge{
+  display:inline-block;padding:6px 9px;border-radius:999px;
+  background:#eee;font-size:12px;margin-right:5px
+}
+.items{
+  margin-top:13px;padding-top:13px;
+  border-top:1px solid #eee
+}
+.item{
+  display:flex;justify-content:space-between;
+  margin:7px 0
+}
+.actions{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:8px;margin-top:14px
+}
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:10px;margin-bottom:18px
+}
+.stat{
+  background:#181818;color:#fff;
+  border-radius:16px;padding:15px
+}
+.stat b{font-size:24px;display:block}
+.hidden{display:none}
+.error{color:#a22;margin-top:10px}
+@media(max-width:650px){
+  .stats{grid-template-columns:1fr}
+  .actions{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div id="loginScreen" class="login">
+  <div class="card">
+    <h1>İşletme Paneli</h1>
+    <p class="muted">Sando Lab · Toastiq · CRAVÉ</p>
+
+    <input id="email" type="email" placeholder="Yönetici e-posta">
+    <input id="password" type="password" placeholder="Şifre">
+
+    <button style="width:100%" onclick="login()">Giriş Yap</button>
+
+    <div id="loginError" class="error"></div>
+  </div>
+</div>
+
+
+<div id="panel" class="hidden">
+
+<header>
+  <div>
+    <h1>İşletme Paneli</h1>
+    <div class="muted">Canlı sipariş yönetimi</div>
+  </div>
+
+  <button class="secondary" onclick="logout()">Çıkış</button>
+</header>
+
+
+<div class="stats">
+
+  <div class="stat">
+    <span>Yeni</span>
+    <b id="newCount">0</b>
+  </div>
+
+  <div class="stat">
+    <span>Hazırlanıyor</span>
+    <b id="prepCount">0</b>
+  </div>
+
+  <div class="stat">
+    <span>Hazır</span>
+    <b id="readyCount">0</b>
+  </div>
+
+</div>
+
+<div id="orders">
+  <div class="card">Siparişler yükleniyor...</div>
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+"https://ispafjoxhmatawvadhbv.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_xGk_ZkAAC-3V7jcGCv78Lw_wG8zuekw";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+async function login(){
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  const errorArea =
+    document.getElementById("loginError");
+
+  errorArea.textContent = "";
+
+  const {error} =
+    await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+    errorArea.textContent =
+      "Giriş başarısız: " + error.message;
+    return;
+  }
+
+  showPanel();
+}
+
+
+async function logout(){
+
+  await db.auth.signOut();
+
+  location.reload();
+}
+
+
+async function checkLogin(){
+
+  const {data} =
+    await db.auth.getSession();
+
+  if(data.session){
+    showPanel();
+  }
+}
+
+
+function showPanel(){
+
+  document
+    .getElementById("loginScreen")
+    .classList.add("hidden");
+
+  document
+    .getElementById("panel")
+    .classList.remove("hidden");
+
+  loadOrders();
+}
+
+
+async function loadOrders(){
+
+  const area =
+    document.getElementById("orders");
+
+  const {data,error} =
+    await db
+      .from("orders")
+      .select(`
+        *,
+        order_items (
+          id,
+          product_name,
+          quantity,
+          unit_price
+        )
+      `)
+      .order("created_at",{ascending:false});
+
+
+  if(error){
+
+    area.innerHTML =
+      `<div class="card">
+      Siparişler alınamadı: ${error.message}
+      </div>`;
+
+    return;
+  }
+
+
+  const orders = data || [];
+
+  updateStats(orders);
+
+
+  if(orders.length === 0){
+
+    area.innerHTML =
+      `<div class="card">
+      Henüz sipariş bulunmuyor.
+      </div>`;
+
+    return;
+  }
+
+
+  area.innerHTML =
+    orders.map(orderCard).join("");
+}
+
+
+function orderCard(order){
+
+  const type =
+    order.order_type === "table"
+      ? "🪑 MASA"
+      : "📦 GEL-AL";
+
+  const customer =
+    order.customer_note || "Misafir";
+
+  const items =
+    (order.order_items || [])
+      .map(item => `
+        <div class="item">
+          <span>
+            ${item.quantity} × ${item.product_name}
+          </span>
+
+          <b>
+            ${Number(item.unit_price || 0)
+              .toLocaleString("tr-TR")} TL
+          </b>
+        </div>
+      `)
+      .join("");
+
+
+  return `
+
+  <div class="card">
+
+    <div class="top">
+
+      <div>
+        <b>${order.order_number}</b>
+
+        <div style="margin-top:8px">
+          <span class="badge">${type}</span>
+          <span class="badge">${statusName(order.status)}</span>
+        </div>
+      </div>
+
+      <b>
+        ${Number(order.total || 0)
+          .toLocaleString("tr-TR")} TL
+      </b>
+
+    </div>
+
+
+    <p>
+      <b>Müşteri:</b> ${customer}
+    </p>
+
+
+    <div class="items">
+      ${items || "Ürün bulunamadı"}
+    </div>
+
+
+    <div class="actions">
+
+      <select
+        onchange="changeStatus(
+          '${order.id}',
+          this.value
+        )">
+
+        ${statusOptions(order.status)}
+
+      </select>
+
+
+      <select
+        onchange="changePayment(
+          '${order.id}',
+          this.value
+        )">
+
+        <option
+          value="unpaid"
+          ${order.payment_status === "unpaid" ? "selected" : ""}>
+          Ödenmedi
+        </option>
+
+        <option
+          value="paid"
+          ${order.payment_status === "paid" ? "selected" : ""}>
+          Ödendi
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+  `;
+}
+
+
+function statusName(status){
+
+  const names = {
+    new:"Yeni",
+    confirmed:"Onaylandı",
+    preparing:"Hazırlanıyor",
+    ready:"Hazır",
+    customer_arrived:"Müşteri Geldi",
+    completed:"Teslim Edildi",
+    cancelled:"İptal"
+  };
+
+  return names[status] || status;
+}
+
+
+function statusOptions(current){
+
+  const statuses = [
+    ["new","Yeni"],
+    ["confirmed","Onaylandı"],
+    ["preparing","Hazırlanıyor"],
+    ["ready","Hazır"],
+    ["customer_arrived","Müşteri Geldi"],
+    ["completed","Teslim Edildi"],
+    ["cancelled","İptal"]
+  ];
+
+  return statuses
+    .map(([value,label]) => `
+      <option
+        value="${value}"
+        ${current === value ? "selected" : ""}>
+        ${label}
+      </option>
+    `)
+    .join("");
+}
+
+
+async function changeStatus(id,status){
+
+  const {error} =
+    await db
+      .from("orders")
+      .update({status})
+      .eq("id",id);
+
+  if(error){
+    alert("Durum değiştirilemedi: " + error.message);
+    return;
+  }
+
+  loadOrders();
+}
+
+
+async function changePayment(id,payment_status){
+
+  const {error} =
+    await db
+      .from("orders")
+      .update({payment_status})
+      .eq("id",id);
+
+  if(error){
+    alert("Ödeme değiştirilemedi: " + error.message);
+    return;
+  }
+
+  loadOrders();
+}
+
+
+function updateStats(orders){
+
+  document.getElementById("newCount")
+    .textContent =
+      orders.filter(o => o.status === "new").length;
+
+  document.getElementById("prepCount")
+    .textContent =
+      orders.filter(o => o.status === "preparing").length;
+
+  document.getElementById("readyCount")
+    .textContent =
+      orders.filter(o => o.status === "ready").length;
+}
+
+
+checkLogin();
+
+</script>
+
+</body>
+</html>
