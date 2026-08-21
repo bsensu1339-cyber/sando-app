@@ -408,28 +408,6 @@
     </div>
 
     <button class="cta" onclick="loadOrderStatus()"> 
-}  
-       let trackingInterval = null;
-
-function startTracking(){
-
-  if(trackingInterval){
-    clearInterval(trackingInterval);
-  }
-
-  loadOrderStatus();
-
-  trackingInterval = setInterval(() => {
-    loadOrderStatus();
-  }, 5000);
-}
-
-function stopTracking(){
-
-  if(trackingInterval){
-    clearInterval(trackingInterval);
-    trackingInterval = null;
-  }
       Durumu Yenile
     </button>
 
@@ -1259,6 +1237,27 @@ async function loadOrderStatus(){
       }
     </p>
   `;
+  let trackingInterval = null;
+
+function startTracking(){
+
+  if(trackingInterval){
+    clearInterval(trackingInterval);
+  }
+
+  loadOrderStatus();
+
+  trackingInterval = setInterval(function(){
+    loadOrderStatus();
+  }, 5000);
+}
+
+function stopTracking(){
+
+  if(trackingInterval){
+    clearInterval(trackingInterval);
+    trackingInterval = null;
+  }
 }  
 loadProducts();
 renderCart();
